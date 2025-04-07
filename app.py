@@ -72,16 +72,18 @@ def get_day():
 cities = read_files()
 
 st.title("Китайский новый год")
-st.markdown(f'Дата: **{datetime.now().strftime("%d.%m.%Y")}**')
-# ddate = st.sidebar.text_input('Введите дату приёма', '')
-# Вводим имя пациента
-patient = st.sidebar.text_input('Введите Ф.И.О. пациента', '')
 
-st.header(patient)
+st.header("")
+
+st.markdown(f'Сегодня: **{datetime.now().strftime("%d.%m.%Y")}**')
+# Вводим имя пациента
+patient = st.text_input('Введите Ф.И.О.', '')
+
+city = st.text_input('Введите город, где Вы находитесь', '')
 
 
 # Вводим дату рождения
-our_date = st.sidebar.text_input('Введите интересующую дату', '')
+our_date = st.text_input('Введите интересующую дату', '')
 if our_date:
     try:
         our_date = pd.to_datetime(our_date, dayfirst=True).strftime("%d.%m.%Y")
