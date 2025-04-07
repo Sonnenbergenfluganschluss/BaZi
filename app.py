@@ -9,9 +9,52 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
-mal = ["крыса", "бык", "тигр", "кролик", "дракон", "змея", "лошадь", "коза", "обезьяна", "петух", "собака", "свинья"]
+animal = ["крыса", "бык", "тигр", "кролик", "дракон", "змея", "лошадь", "коза", "обезьяна", "петух", "собака", "свинья"]
 stihiya = ["дерево", "дерево", "огонь", "огонь", "почва", "почва",  "металл",  "металл", "вода", "вода"]
 in_yan = ["ян", "инь"]
+
+vis_yaer = [1920, 1924, 1928, 1932, 1936, 1940, 1944, 1948, 1952, 1956, 1960, 1964, 1968, 
+            1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020, 
+            2024, 2028, 2032, 2036, 2040, 2044, 2048, 2052]
+
+moon_palace = dict({1: [1920, 1942, 0, 1987, 2009, 2032], 2: [0, 1943, 1965, 1988, 2010, 0], 
+    3: [1921, 1944, 1966, 0, 2011, 2033], 4: [1922, 0, 1967, 1989, 2012, 2034], 
+    5: [1923, 1945, 1968, 1990, 0, 2035], 6: [1924, 1946, 0, 1991, 2013, 2036], 
+    7: [0, 1947, 1969, 1992, 2014, 0], 8: [1925, 1948, 1970, 0, 2015, 2037], 
+    9: [1926, 0, 1971, 1993, 2016, 2038], 10: [1927, 1949, 1972, 1994, 0, 2039], 
+    11: [1928, 1950, 0, 1995, 2017, 2040], 12: [0, 1951, 1973, 1996, 2018, 0], 
+    13: [1929, 1952, 1974, 0, 2019, 2041], 14: [1930, 0, 1975, 1997, 2020, 2042], 
+    15: [1931, 1953, 1976, 1998, 0, 2043], 16: [1932, 1954, 0, 1999, 2021, 2044], 
+    17: [0, 1955, 1977, 2000, 2022, 0], 18: [1933, 1956, 1978, 0, 2023, 2045], 
+    19: [1934, 0, 1979, 2001, 2024, 2046], 20: [1935, 1957, 1980, 2002, 0, 2047], 
+    21: [1936, 1958, 0, 2003, 2025, 2048], 22: [0, 1959, 1981, 2004, 2026, 0], 
+    23: [1937, 1960, 1982, 0, 2027, 2049], 24: [1938, 0, 1983, 2005, 2028, 2050], 
+    25: [1939, 1961, 1984, 2006, 0, 2051], 26: [1940, 1962, 0, 2007, 2029, 2052], 
+    27: [0, 1963, 1985, 2008, 2030, 0], 28: [1941, 1964, 1986, 0, 2031, 2053]})
+
+sec_step = {1: 27,
+            2: 2,
+            3: 2,
+            4: 5,
+            5: 7,
+            6: 10,
+            7: 12,
+            8: 15,
+            9: 18,
+            10: 20,
+            11: 23,
+            12: 25}
+
+
+man = ["Liv1", "Liv4", "Liv3", "Liv3", "Liv5", "Liv2", "Liv8", 
+       "Kid1", "Kid7", "Kid3", "Kid3", "Kid4", "Kid2", "Kid10", 
+       "Lu11", "Lu8", "Lu9", "Lu9", "Lu7", "Lu10", "Lu5", 
+       "Hg9, Ht9", "Hg5, Ht4", "Hg7, Ht7", "Hg7, Ht7", "Hg6, Ht5", "Hg8, Ht8", "Hg3, Ht3"]
+
+woman = ["Gb41", "Gb44", "Gb34", "Gb37", "Gb40", "Gb38", "Gb43", 
+       "Bl65", "Bl67", "Bl40", "Bl58", "Kid4, Bl64", "Bl60", "Bl66", 
+       "Co3", "Co1", "Co11", "Co6", "Co4", "Co5", "Co2", 
+       "Si3", "Si1", "Si8", "Si7", "Si4", "Si5", "Si2"]
 
 
 @st.cache_data
@@ -518,75 +561,78 @@ if our_date:
 #                 # except:
 #                 #     new_save.to_csv(f"patients/{patient}.csv")
 
-# ####################################   Лунные дворцы    ############################################
+####################################   Лунные дворцы    ############################################
+    
+    method = st.selectbox(
+    "Выберете метод лечения",
+    (" ", "Питание и Ке", "Лунные дворцы"))
 
-
-#     if method=="Лунные дворцы":
-#         image_path = "data/Лунные дворцы.jpg"
-#         image = Image.open(image_path)
-#         st.image(image, width=600)
+    if method=="Лунные дворцы":
+        # image_path = "data/Лунные дворцы.jpg"
+        # image = Image.open(image_path)
+        # st.image(image, width=600)
         
-#         # Вводим пол пациента
-#         sex = st.sidebar.selectbox(
-#             "Выберете пол пациента",
-#             ("", "Мужчина", "Женщина"),
-#         )
+        # Вводим пол пациента
+        sex = st.selectbox(
+            "Выберете пол пациента",
+            ("", "Мужчина", "Женщина"),
+        )
 
-#         doh = st.sidebar.text_input('Введите дату события', '')
-#         if doh:
-#             try:
-#                 date = str(pd.to_datetime(doh, dayfirst=True)).split()[0] #input("Введите дату рождения")
-#                 year = int(date[:4])
-#                 month = int(date[5:7])
-#                 day = int(date[8:])
-#                 st.markdown(f'Дата события: **{pd.to_datetime(doh, dayfirst=True).strftime("%d.%m.%Y")}**')
-#             except:
-#                 st.error("*Некорректная дата. Попробуйте снова*")
+        doh = st.text_input('Введите дату события', '')
+        if doh:
+            try:
+                date = str(pd.to_datetime(doh, dayfirst=True)).split()[0] #input("Введите дату рождения")
+                year = int(date[:4])
+                month = int(date[5:7])
+                day = int(date[8:])
+                st.markdown(f'Дата события: **{pd.to_datetime(doh, dayfirst=True).strftime("%d.%m.%Y")}**')
+            except:
+                st.error("*Некорректная дата. Попробуйте снова*")
 
-#             for k, v in moon_palace.items():
-#                 if year in v:
-#                     first_step = k
+            for k, v in moon_palace.items():
+                if year in v:
+                    first_step = k
 
-#             if (year in vis_yaer) & (pd.to_datetime(date) > pd.to_datetime(f"{year}-02-28")):
-#                 first_step = first_step+1
+            if (year in vis_yaer) & (pd.to_datetime(date) > pd.to_datetime(f"{year}-02-28")):
+                first_step = first_step+1
 
-#             lunar_day = first_step + sec_step[month]+ day
+            lunar_day = first_step + sec_step[month]+ day
 
-#             while lunar_day > 28:
-#                 lunar_day+=-28
-#             st.markdown(f"Лунный день по дате события: **{lunar_day}**")
-#             st.markdown(f"Янские точки дня: \t**{woman[lunar_day-1]}**")
-#             st.markdown(f"Иньские точки дня: \t**{man[lunar_day-1]}**")
+            while lunar_day > 28:
+                lunar_day+=-28
+            st.markdown(f"Лунный день по дате события: **{lunar_day}**")
+            # st.markdown(f"Янские точки дня: \t**{woman[lunar_day-1]}**")
+            # st.markdown(f"Иньские точки дня: \t**{man[lunar_day-1]}**")
             
             
-#             if lunar_day in range(1, 15):
-#                 lunar_day = lunar_day+14
-#             else:
-#                 lunar_day = lunar_day-14
+            # if lunar_day in range(1, 15):
+            #     lunar_day = lunar_day+14
+            # else:
+            #     lunar_day = lunar_day-14
             
             
-#             text_ld = ""
+            # text_ld = ""
             
-#             if sex == "Мужчина":
-#                 points_ld = man[lunar_day-1]
-#                 st.markdown(f"#### Точки по лунным дворцам: \t:green[{points_ld}]")
+            # if sex == "Мужчина":
+            #     points_ld = man[lunar_day-1]
+            #     st.markdown(f"#### Точки по лунным дворцам: \t:green[{points_ld}]")
             
-#             else:
-#                 points_ld = woman[lunar_day-1]
-#                 st.markdown(f"#### Точки по лунным дворцам: \t:green[{points_ld}]")
+            # else:
+            #     points_ld = woman[lunar_day-1]
+            #     st.markdown(f"#### Точки по лунным дворцам: \t:green[{points_ld}]")
 
-#             # points_ld = points_ld.split(', ')
-#             # for el in points_ld:
-#             #     elem = re.match("\D*", el)[0]
-#             #     if elem in dnt_use:
-#             #         st.warning(f"Точку **{el}** использовать нельзя!!!")
-#             for p in points_ld.split(', '):
-#                 st.markdown(f"#### :green[{p}]")
-#                 try:
-#                     st.markdown(f"""*{points.loc[p, "Локализация"]}*""")
-#                 except:
-#                     st.markdown(f"""*Точки нет в базе данных*""")
-#             st.markdown(f"""*{technika['ld']}*""")
+            # points_ld = points_ld.split(', ')
+            # for el in points_ld:
+            #     elem = re.match("\D*", el)[0]
+            #     if elem in dnt_use:
+            #         st.warning(f"Точку **{el}** использовать нельзя!!!")
+            # for p in points_ld.split(', '):
+            #     st.markdown(f"#### :green[{p}]")
+            #     try:
+            #         st.markdown(f"""*{points.loc[p, "Локализация"]}*""")
+            #     except:
+            #         st.markdown(f"""*Точки нет в базе данных*""")
+            # st.markdown(f"""*{technika['ld']}*""")
 
 #         #################################################       Выбранные точки      ##################################################
         
