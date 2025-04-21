@@ -242,7 +242,7 @@ if our_date:
     in_yan = cicle[cicle['Название_calender'] == day_v]['инь_ян'].values[0]
     st.markdown(f"День: **{in_yan.capitalize()}**")
 
-    st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_v]['Цзя_Цзы'].values[0]}]**")
+    st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
     st.markdown("--"*80)
 
 
