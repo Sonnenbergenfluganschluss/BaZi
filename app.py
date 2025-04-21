@@ -234,6 +234,7 @@ if city :
         feitenbafa = pd.read_csv("data/feitenbafa.csv")
         for_feitenbafa = pd.read_csv("data/for_feitenbafa.csv")
 
+
         day_predictions = feitenbafa.merge(for_feitenbafa.rename(columns={"Иероглиф":day_iero[0]}))
         feitenbafa_day = day_predictions[[day_iero[0], 'Иероглиф',	'Время',	'Канал',	'Точки']]
 
@@ -241,11 +242,11 @@ if city :
 
         # Определяем час по текущему времени.
 
-        if (int(current_hour) == 21) or (int(current_hour) == 22):
-            current_hour_china_list = feitenbafa_day.iloc[11].values
+        if (int(current_hour) == 23) or (int(current_hour) == 0):
+            current_hour_china_list = feitenbafa_day.iloc[0].values
         else:
-            for h in range(11):
-                if (int(current_hour) >= (feitenbafa['Время_int'][h])) & (int(current_hour) < (feitenbafa['Время_int'][h+1])):
+            for h in range(1,12):
+                if (int(current_hour) >= (feitenbafa['Время_int'][h])) & (int(current_hour) < (feitenbafa['Время_int'][h]+2)):
                     current_hour_china_list = feitenbafa_day.iloc[h].values
                     break
 
@@ -324,9 +325,10 @@ if city :
                 st.markdown(f"Точки 28 Лунных Стоянок (Ду май): **{point}**")
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
+
                 st.markdown(f"Помочь выйти событию (седирование) \
-                        \nЯн: \t{man[lunar_day-1]}\
-                        \nИнь: \t{woman[lunar_day-1]}")
+                        \nЯн \t{man[lunar_day-1]}\
+                        \nИнь \t{woman[lunar_day-1]}")
 
                 st.markdown(f"Заставийть выйти событие (тонизация) \
                         \nЯн: \t{man[lunar_day_ton-1]}\
