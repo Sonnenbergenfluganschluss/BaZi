@@ -177,7 +177,8 @@ if city :
     st.markdown(f"*:rainbow[Текущее административное время]:* **:blue[{CURRENT_TIME}]**")
     st.markdown(f"*:rainbow[Текущее солнечное время]:* **:blue[{CURRENT_TIME_SOLAR}]**")
 
-    st.markdown("*Рассчет по умолчанию выполняется по солнечному времени. Если нужен рассчет по времени административному, поставьте галочкуниже:*")
+    st.markdown("Рассчет по умолчанию выполняется по солнечному времени. \
+                Если нужен рассчет по времени административному, поставьте галочкуниже:")
     if st.checkbox("##### Нужен расчёт по административному времени"):
         our_time = CURRENT_TIME
     else:
@@ -252,15 +253,15 @@ if city :
 
         current_hour_china = ''.join(current_hour_china_list[:2])
 
-        st.markdown(f"**{vis_date}** день: **{day}**")
-        srt_1 = f"День: **{day}**"
+        # st.markdown(f"**{vis_date}** день: **{day}**")
+        # srt_1 = f"День: **{day}**"
         in_yan = cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]
-        st.markdown(f"День: **{in_yan.capitalize()}**")
-        str_2 = in_yan.capitalize()
+        # st.markdown(f"День: **{in_yan.capitalize()}**")
+        # str_2 = in_yan.capitalize()
 
-        st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
-        str_3 = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
-        st.markdown("--"*80)
+        # st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
+        # str_3 = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
+        # st.markdown("--"*80)
 
 
         # Определяем сезон по дате
@@ -272,24 +273,26 @@ if city :
                     season = seasons.iloc[d][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
                     break
 
-        st.markdown("*Точки 24 Сезонов (Жэнь май):*")
-        st.markdown(f"**:blue[{'  ||  '.join(season).strip()}]**")
-        str_4 = '  ||  '.join(season).strip()
-        st.markdown("--"*80)
+        # st.markdown("*Точки 24 Сезонов (Жэнь май):*")
+        # st.markdown(f"**:blue[{'  ||  '.join(season).strip()}]**")
+        # str_4 = '  ||  '.join(season).strip()
+        # st.markdown("--"*80)
         dow_dict = {0:"Понедельник", 1:"Вторник", 
                 2:"Среда", 3:"Четверг",
                 4:"Пятница", 5:"Суббота", 6:"Воскресенье"}
 
-
-
-        st.markdown(f"День недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**")
-        str_5 = dow_dict[pd.to_datetime(our_date).day_of_week]
-        st.markdown("--"*80)
+        # st.markdown(f"День недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**")
+        # str_5 = dow_dict[pd.to_datetime(our_date).day_of_week]
 
         planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
-        st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
-        str_6 = planet.capitalize()
-        st.markdown("--"*80)
+        # st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
+
+        st.markdown(f"**{vis_date}** день: **{day}**\
+                    \nДень: **{in_yan.capitalize()}**\
+                    \nЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**\
+                    \nТочки 24 Сезонов (Жэнь май): \t**:blue[{'  ||  '.join(season).strip()}]**\
+                    \nДень недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**\
+                    \nПланета-покровитель: **:green[{planet.capitalize()}]**")
 
 
 
