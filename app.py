@@ -110,7 +110,7 @@ st.header("")
 st.markdown(f'Сегодня: **{datetime.now().strftime("%d.%m.%Y")}**')
 
 
-birthday =  st.text_input(':orange[Введите дату рождения]', '')
+birthday =  st.text_input(':orange[Введите дату рождения в формате дд.мм.гггг]', '')
 
 if birthday:
     try:
@@ -184,25 +184,12 @@ if city :
         our_time = CURRENT_TIME_SOLAR
 
     CURRENT_TIME_SOLAR = our_time
-    st.markdown(CURRENT_TIME_SOLAR)
-    
-    # genre = st.radio(
-    #     "Выберете вариант рассчёта времени",
-    #     [f"*:rainbow[Текущее административное время]:* **:blue[{CURRENT_TIME}]**", f"*:rainbow[Текущее солнечное время]:* **:blue[{CURRENT_TIME_SOLAR}]**"],
-    # )
-
-    # if genre == f"*:rainbow[Текущее солнечное время]:* **:blue[{CURRENT_TIME_SOLAR}]**":
-    #     RES_TIME = CURRENT_TIME_SOLAR
-    #     HOUR=(datetime.utcnow() + timedelta(hours=h, minutes=minutes)).time().strftime('%H')
-    # else:
-    #     RES_TIME = CURRENT_TIME
-    #     HOUR=(datetime.utcnow() + timedelta(hours=utc)).time().strftime('%H')
-    
+    st.markdown(CURRENT_TIME_SOLAR)    
 
     st.markdown("--"*80)
 
     # Вводим дату рождения
-    our_date = st.text_input(':orange[Введите интересующую дату]', '')
+    our_date = st.text_input(':orange[Введите интересующую дату в формате дд.мм.гггг]', '')
     
     if our_date:
         try:
@@ -271,10 +258,6 @@ if city :
 
         st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
         st.markdown("--"*80)
-
-
-
-
 
 
         # Определяем сезон по дате
