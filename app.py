@@ -108,11 +108,6 @@ st.header("")
 
 st.markdown(f'Сегодня: **{datetime.now().strftime("%d.%m.%Y")}**')
 
-# CURRENT_DATE = datetime.now().date
-# CURRENT_TIME = datetime.now().time
-
-
-
 
 birthday =  st.text_input(':orange[Введите дату рождения]', '')
 
@@ -175,7 +170,7 @@ if city :
     CURRENT_TIME = datetime.now().time().strftime("%H:%M")
     CURRENT_TIME_SOLAR = (datetime.utcnow() + timedelta(hours=h, minutes=minutes)).time().strftime('%H:%M')
 
-    st.markdown(f"*Текущее административное время:* **:blue[{CURRENT_TIME}]**")
+    # st.markdown(f"*Текущее административное время:* **:blue[{CURRENT_TIME}]**")
     st.markdown(f"*Среднее солнечное время:* **:blue[{CURRENT_TIME_SOLAR}]**")
     st.markdown("--"*80)
 
