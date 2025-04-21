@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta, date
 import re
 import os
+import pytz
 
 animal = ["крыса", "бык", "тигр", "кролик", "дракон", "змея", "лошадь", "коза", "обезьяна", "петух", "собака", "свинья"]
 stihiya = ["дерево", "дерево", "огонь", "огонь", "почва", "почва",  "металл",  "металл", "вода", "вода"]
@@ -154,31 +155,57 @@ city = st.selectbox(':orange[Введите город, где Вы находи
 if city :
     if len(cities[cities["Город"].str.contains(city, regex=True).fillna(False)]) != 0:
             raw = cities[cities["Город"].str.contains(city, regex=True).fillna(False)][["Индекс", "Тип региона", "Регион", "Тип района", 
-                                                                                "Район", "Тип города", "Город", "Тип н/п", "Н/п"]].dropna(axis=1)
+                                                                                "Район", "Тип города", "Город", "Тип н/п", "Н/п", "Часовой пояс"]].dropna(axis=1)
     elif len(cities[cities["Регион"].str.contains(city, regex=True).fillna(False)]) != 0:
             raw = (cities[cities["Регион"].str.contains(city, regex=True).fillna(False)][["Индекс", "Тип региона", "Регион", 
-                "Тип района",	"Район", "Тип города", "Город", "Тип н/п",	"Н/п"]].dropna(axis=1))
+                "Тип района",	"Район", "Тип города", "Город", "Тип н/п",	"Н/п", "Часовой пояс"]].dropna(axis=1))
     else:
         raw = (cities[cities["Н/п"].str.contains(city, regex=True).fillna(False)][["Индекс", "Тип региона", "Регион", 
-                "Тип района",	"Район", "Тип города", "Город", "Тип н/п",	"Н/п"]].dropna(axis=1))
+                "Тип района",	"Район", "Тип города", "Город", "Тип н/п",	"Н/п", "Часовой пояс"]].dropna(axis=1))
 
     id_city = raw.index
     long = cities.loc[id_city, "Долгота"].values[0]
-    h = int(long//15)
-    minutes = int(round((long/15 - h)*60))
-    
-    CURRENT_TIME = datetime.now().time().strftime("%H:%M")
-    CURRENT_TIME_SOLAR = (datetime.utcnow() + timedelta(hours=h, minutes=minutes)).time().strftime('%H:%M')
+    hours = int(long//15)
+    minutes = int(round((long/15 - hours)*60))
 
-    # st.markdown(f"*Текущее административное время:* **:blue[{CURRENT_TIME}]**")
-    st.markdown(f"*Среднее солнечное время:* **:blue[{CURRENT_TIME_SOLAR}]**")
+    utc = int(raw["Часовой пояс"].values[0])
+
+    CURRENT_TIME = (datetime.utcnow() + timedelta(hours=utc)).time().strftime('%H:%M')
+    CURRENT_TIME_SOLAR = (datetime.utcnow() + timedelta(hours=hours, minutes=minutes)).time().strftime('%H:%M')
+
+
+    st.markdown(f"*:rainbow[Текущее административное время]:* **:blue[{CURRENT_TIME}]**")
+    st.markdown(f"*:rainbow[Текущее солнечное время]:* **:blue[{CURRENT_TIME_SOLAR}]**")
+
+    st.markdown("Рассчет по умолчанию выполняется по солнечному времени. Если нужен рассчет по времени административному, поставьте галочкуниже:")
+    if st.checkbox("Нужен расчёт по административному времени"):
+        our_time = CURRENT_TIME
+    else:
+        our_time = CURRENT_TIME_SOLAR
+
+    CURRENT_TIME_SOLAR = our_time
+    st.markdown(CURRENT_TIME_SOLAR)
+    
+    # genre = st.radio(
+    #     "Выберете вариант рассчёта времени",
+    #     [f"*:rainbow[Текущее административное время]:* **:blue[{CURRENT_TIME}]**", f"*:rainbow[Текущее солнечное время]:* **:blue[{CURRENT_TIME_SOLAR}]**"],
+    # )
+
+    # if genre == f"*:rainbow[Текущее солнечное время]:* **:blue[{CURRENT_TIME_SOLAR}]**":
+    #     RES_TIME = CURRENT_TIME_SOLAR
+    #     HOUR=(datetime.utcnow() + timedelta(hours=h, minutes=minutes)).time().strftime('%H')
+    # else:
+    #     RES_TIME = CURRENT_TIME
+    #     HOUR=(datetime.utcnow() + timedelta(hours=utc)).time().strftime('%H')
+    
+
     st.markdown("--"*80)
 
     # Вводим дату рождения
     our_date = st.text_input(':orange[Введите интересующую дату]', '')
+    
     if our_date:
         try:
-
             our_date = vis_date = re.sub('\D', '.', our_date)
             our_date = our_date.split('.')
             d = int(our_date[0])
@@ -247,51 +274,20 @@ if city :
 
 
 
-        # Считаем лунную стоянку
-        for k, v in moon_palace.items():
-            if our_date.year in v:
-                first_step = k
-        if (our_date.year in vis_yaer) & (pd.to_datetime(our_date) > pd.to_datetime(f"{our_date.year}-02-28")):
-            first_step = first_step+1
-
-        lunar_day = first_step + sec_step[our_date.month]+ our_date.day
-
-        while lunar_day > 28:
-            lunar_day+=-28
-        if lunar_day in range(1, 15):
-            lunar_day_ton = lunar_day+14
-        else:
-            lunar_day_ton = lunar_day-14
-        symbol = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Иероглиф"].values[0]
-        val = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Созвездие"].values[0]
-        point = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][0] + \
-            "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
-
-        st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}**")
-        st.markdown(f"Точки 28 Лунных Стоянок (Ду май): **{point}**")
-        st.markdown("*Техника 28 Лунных Стоянок*")
-
-        st.markdown(f"Помочь выйти событию (седирование) \
-                \nЯн: \t{man[lunar_day-1]}\
-                \nИнь: \t{woman[lunar_day-1]}")
-
-        st.markdown(f"Заставийть выйти событие (тонизация) \
-                \nЯн: \t{man[lunar_day_ton-1]}\
-                \nИнь: \t{woman[lunar_day_ton-1]}")
-        
-        st.markdown("--"*80)
 
 
 
         # Определяем сезон по дате
         if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
-            season = seasons.iloc[23][["Символ", "Название", "Иероглиф",	"Месяц", "Точки_Жэнь_май",	"Название_точки"]].values
+            season = seasons.iloc[23][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
         else:
             for d in range(24):
                 if (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][d])) & (pd.to_datetime(our_date)<pd.to_datetime(seasons[str(our_date.year)][d+1])):
-                    season = seasons.iloc[d][["Символ", "Название", "Иероглиф",	"Месяц", "Точки_Жэнь_май",	"Название_точки"]].values
+                    season = seasons.iloc[d][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
                     break
-        st.markdown(f"*Точки 24 Сезонов (Жэнь май)* || **{' '.join(season[-2:]).strip()}**")
+
+        st.markdown("*Точки 24 Сезонов (Жэнь май):*")
+        st.markdown(f"**:blue[{'  ||  '.join(season).strip()}]**")
         st.markdown("--"*80)
         dow_dict = {0:"Понедельник", 1:"Вторник", 
                 2:"Среда", 3:"Четверг",
@@ -303,16 +299,51 @@ if city :
         st.markdown("--"*80)
 
         planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
-        st.markdown(f"Планета-покровитель: **{planet.capitalize()}**")
+        st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
         st.markdown("--"*80)
 
 
 
         method = st.selectbox(
-                "Выберете метод лечения",
-                (" ", "ФЭЙ ТЭН БА ФА", "ЛИН ГУЙ БА ФА", "ТАЙ ЯН БА ФА", "ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА"))
+                "Выберете метод хронопунктуры",
+                (" ", "ЛУННЫЕ ДВОРЦЫ", "ФЭЙ ТЭН БА ФА", "ЛИН ГУЙ БА ФА", "ТАЙ ЯН БА ФА", "ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА"))
         
+        if method:
+            if method=="ЛУННЫЕ ДВОРЦЫ":
+                # Считаем лунную стоянку
+                for k, v in moon_palace.items():
+                    if our_date.year in v:
+                        first_step = k
+                if (our_date.year in vis_yaer) & (pd.to_datetime(our_date) > pd.to_datetime(f"{our_date.year}-02-28")):
+                    first_step = first_step+1
 
+                lunar_day = first_step + sec_step[our_date.month]+ our_date.day
+
+                while lunar_day > 28:
+                    lunar_day+=-28
+                if lunar_day in range(1, 15):
+                    lunar_day_ton = lunar_day+14
+                else:
+                    lunar_day_ton = lunar_day-14
+                symbol = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Иероглиф"].values[0]
+                val = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Созвездие"].values[0]
+                point = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][0] + \
+                    "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
+
+                st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}**")
+                st.markdown(f"Точки 28 Лунных Стоянок (Ду май): **{point}**")
+                st.markdown("*Техника 28 Лунных Стоянок*")
+
+                st.markdown(f"Помочь выйти событию (седирование) \
+                        \nЯн: \t{man[lunar_day-1]}\
+                        \nИнь: \t{woman[lunar_day-1]}")
+
+                st.markdown(f"Заставийть выйти событие (тонизация) \
+                        \nЯн: \t{man[lunar_day_ton-1]}\
+                        \nИнь: \t{woman[lunar_day_ton-1]}")
+                
+                st.markdown("--"*80)
+                
 
         if method:
             if method=="ФЭЙ ТЭН БА ФА":
@@ -432,4 +463,3 @@ if city :
                         hide_index=True,
                         use_container_width=True
                     )
-    
