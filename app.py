@@ -241,10 +241,10 @@ if city :
 
         # Определяем час по текущему времени.
 
-        if ((int(current_hour) >= 0) & (int(current_hour) < 1)) or (int(current_hour) >= 23):
-            current_hour_china_list = feitenbafa_day.iloc[0].values
+        if (int(current_hour) == 21) or (int(current_hour) == 22):
+            current_hour_china_list = feitenbafa_day.iloc[11].values
         else:
-            for h in range(1, 12):
+            for h in range(11):
                 if (int(current_hour) >= (feitenbafa['Время_int'][h])) & (int(current_hour) < (feitenbafa['Время_int'][h+1])):
                     current_hour_china_list = feitenbafa_day.iloc[h].values
                     break
