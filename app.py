@@ -174,264 +174,264 @@ if city :
     st.markdown(f"*Среднее солнечное время:* **:blue[{CURRENT_TIME_SOLAR}]**")
     st.markdown("--"*80)
 
-# Вводим дату рождения
-our_date = st.text_input(':orange[Введите интересующую дату]', '')
-if our_date:
-    try:
+    # Вводим дату рождения
+    our_date = st.text_input(':orange[Введите интересующую дату]', '')
+    if our_date:
+        try:
 
-        our_date = vis_date = re.sub('\D', '.', our_date)
-        our_date = our_date.split('.')
-        d = int(our_date[0])
-        m = int(our_date[1])
-        y = int(our_date[2])
-        our_date = date(y, m, d)
+            our_date = vis_date = re.sub('\D', '.', our_date)
+            our_date = our_date.split('.')
+            d = int(our_date[0])
+            m = int(our_date[1])
+            y = int(our_date[2])
+            our_date = date(y, m, d)
 
-        year_o = calender[calender['date']==pd.to_datetime(our_date)]['years'].values[0]
-        month_o = calender[calender['date']==pd.to_datetime(our_date)]['months'].values[0]
-        day_o = calender[calender['date']==pd.to_datetime(our_date)]['days'].values[0]
-        day = cicle[cicle["Название_calender"] == day_o]["Название_Русский"].values[0]
-        day_iero = cicle[cicle["Название_calender"] == day_o]["Иероглиф"].values[0]
-        month_iero = cicle[cicle["Название_calender"] == month_o]["Иероглиф"].values[0]
-        year_iero = cicle[cicle["Название_calender"] == year_o]["Иероглиф"].values[0]
-
-
-        our_date_df = pd.DataFrame(columns=["День", "Месяц", "Год"])
-        our_date_df["День"] = [
-            f"{cicle[cicle['Название_calender'] == day_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]}",
-            day_iero
-        ]
-        our_date_df["Месяц"] = [
-            f"{cicle[cicle['Название_calender'] == month_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == month_o]['инь_ян'].values[0]}",
-            month_iero
-        ]
-        our_date_df["Год"] = [
-            f"{cicle[cicle['Название_calender'] == year_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == year_o]['инь_ян'].values[0]}",
-            year_iero
-        ]
-        st.dataframe(our_date_df, hide_index=True, column_config={
-            "День":st.column_config.TextColumn(default="st."),
-            "Месяц":st.column_config.TextColumn(default="st."),
-            "Год":st.column_config.TextColumn(default="st.")
-        }, use_container_width=True)
-    except:
-        st.error("Некорректная дата. Попробуйте снова")
-        
-    
-    feitenbafa = pd.read_csv("data/feitenbafa.csv")
-    for_feitenbafa = pd.read_csv("data/for_feitenbafa.csv")
-
-    day_predictions = feitenbafa.merge(for_feitenbafa.rename(columns={"Иероглиф":day_iero[0]}))
-    feitenbafa_day = day_predictions[[day_iero[0], 'Иероглиф',	'Время',	'Канал',	'Точки']]
-
-    current_hour = re.search(r"(\d*)", CURRENT_TIME_SOLAR)[0]
-
-    # Определяем час по текущему времени.
-
-    if ((int(current_hour) >= 0) & (int(current_hour) < 1)) or (int(current_hour) >= 23):
-        current_hour_china_list = feitenbafa_day.iloc[0].values
-    else:
-        for h in range(1, 12):
-            if (int(current_hour) >= (feitenbafa['Время_int'][h])) & (int(current_hour) < (feitenbafa['Время_int'][h+1])):
-                current_hour_china_list = feitenbafa_day.iloc[h].values
-                break
-
-    current_hour_china = ''.join(current_hour_china_list[:2])
-
-    st.markdown(f"**{vis_date}** день: **{day}**")
-
-    in_yan = cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]
-    st.markdown(f"День: **{in_yan.capitalize()}**")
-
-    st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
-    st.markdown("--"*80)
+            year_o = calender[calender['date']==pd.to_datetime(our_date)]['years'].values[0]
+            month_o = calender[calender['date']==pd.to_datetime(our_date)]['months'].values[0]
+            day_o = calender[calender['date']==pd.to_datetime(our_date)]['days'].values[0]
+            day = cicle[cicle["Название_calender"] == day_o]["Название_Русский"].values[0]
+            day_iero = cicle[cicle["Название_calender"] == day_o]["Иероглиф"].values[0]
+            month_iero = cicle[cicle["Название_calender"] == month_o]["Иероглиф"].values[0]
+            year_iero = cicle[cicle["Название_calender"] == year_o]["Иероглиф"].values[0]
 
 
-
-    # Считаем лунную стоянку
-    for k, v in moon_palace.items():
-        if our_date.year in v:
-            first_step = k
-    if (our_date.year in vis_yaer) & (pd.to_datetime(our_date) > pd.to_datetime(f"{our_date.year}-02-28")):
-        first_step = first_step+1
-
-    lunar_day = first_step + sec_step[our_date.month]+ our_date.day
-
-    while lunar_day > 28:
-        lunar_day+=-28
-    if lunar_day in range(1, 15):
-        lunar_day_ton = lunar_day+14
-    else:
-        lunar_day_ton = lunar_day-14
-    symbol = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Иероглиф"].values[0]
-    val = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Созвездие"].values[0]
-    point = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][0] + \
-        "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
-
-    st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}**")
-    st.markdown(f"Точки 28 Лунных Стоянок (Ду май): **{point}**")
-    st.markdown("*Техника 28 Лунных Стоянок*")
-
-    st.markdown(f"Помочь выйти событию (седирование) \
-            \nЯн: \t{man[lunar_day-1]}\
-            \nИнь: \t{woman[lunar_day-1]}")
-
-    st.markdown(f"Заставийть выйти событие (тонизация) \
-            \nЯн: \t{man[lunar_day_ton-1]}\
-            \nИнь: \t{woman[lunar_day_ton-1]}")
-    
-    st.markdown("--"*80)
-
-
-
-    # Определяем сезон по дате
-    if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
-        season = seasons.iloc[23][["Символ", "Название", "Иероглиф",	"Месяц", "Точки_Жэнь_май",	"Название_точки"]].values
-    else:
-        for d in range(24):
-            if (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][d])) & (pd.to_datetime(our_date)<pd.to_datetime(seasons[str(our_date.year)][d+1])):
-                season = seasons.iloc[d][["Символ", "Название", "Иероглиф",	"Месяц", "Точки_Жэнь_май",	"Название_точки"]].values
-                break
-    st.markdown(f"*Точки 24 Сезонов (Жэнь май)* || **{' '.join(season[-2:]).strip()}**")
-    st.markdown("--"*80)
-    dow_dict = {0:"Понедельник", 1:"Вторник", 
-            2:"Среда", 3:"Четверг",
-            4:"Пятница", 5:"Суббота", 6:"Воскресенье"}
-
-
-
-    st.markdown(f"День недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**")
-    st.markdown("--"*80)
-
-    planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
-    st.markdown(f"Планета-покровитель: **{planet.capitalize()}**")
-    st.markdown("--"*80)
-
-
-
-    method = st.selectbox(
-            "Выберете метод лечения",
-            (" ", "ФЭЙ ТЭН БА ФА", "ЛИН ГУЙ БА ФА", "ТАЙ ЯН БА ФА", "ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА"))
-    
-
-
-    if method:
-        if method=="ФЭЙ ТЭН БА ФА":
-    
-                
-            st.markdown(" || ".join(current_hour_china_list[1:]))
+            our_date_df = pd.DataFrame(columns=["День", "Месяц", "Год"])
+            our_date_df["День"] = [
+                f"{cicle[cicle['Название_calender'] == day_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]}",
+                day_iero
+            ]
+            our_date_df["Месяц"] = [
+                f"{cicle[cicle['Название_calender'] == month_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == month_o]['инь_ян'].values[0]}",
+                month_iero
+            ]
+            our_date_df["Год"] = [
+                f"{cicle[cicle['Название_calender'] == year_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == year_o]['инь_ян'].values[0]}",
+                year_iero
+            ]
+            st.dataframe(our_date_df, hide_index=True, column_config={
+                "День":st.column_config.TextColumn(default="st."),
+                "Месяц":st.column_config.TextColumn(default="st."),
+                "Год":st.column_config.TextColumn(default="st.")
+            }, use_container_width=True)
+        except:
+            st.error("Некорректная дата. Попробуйте снова")
             
-            feitenbafa_day_disp = feitenbafa_day.iloc[:, 1:].T
-            feitenbafa_day_disp.to_csv("data/feitenbafa_day_disp.csv", index=False)
-            feitenbafa_day_disp = pd.read_csv("data/feitenbafa_day_disp.csv", header=1)
-            n=90
-            st.dataframe(
-                feitenbafa_day_disp,
-                column_config= {
-                    feitenbafa_day_disp.columns[0]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[1]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[2]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[3]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[4]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[5]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[6]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[7]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[8]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[9]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[10]:st.column_config.Column(width=n),
-                    feitenbafa_day_disp.columns[11]:st.column_config.Column(width=n),
-                },
-                hide_index=True
-            )
         
+        feitenbafa = pd.read_csv("data/feitenbafa.csv")
+        for_feitenbafa = pd.read_csv("data/for_feitenbafa.csv")
+
+        day_predictions = feitenbafa.merge(for_feitenbafa.rename(columns={"Иероглиф":day_iero[0]}))
+        feitenbafa_day = day_predictions[[day_iero[0], 'Иероглиф',	'Время',	'Канал',	'Точки']]
+
+        current_hour = re.search(r"(\d*)", CURRENT_TIME_SOLAR)[0]
+
+        # Определяем час по текущему времени.
+
+        if ((int(current_hour) >= 0) & (int(current_hour) < 1)) or (int(current_hour) >= 23):
+            current_hour_china_list = feitenbafa_day.iloc[0].values
+        else:
+            for h in range(1, 12):
+                if (int(current_hour) >= (feitenbafa['Время_int'][h])) & (int(current_hour) < (feitenbafa['Время_int'][h+1])):
+                    current_hour_china_list = feitenbafa_day.iloc[h].values
+                    break
+
+        current_hour_china = ''.join(current_hour_china_list[:2])
+
+        st.markdown(f"**{vis_date}** день: **{day}**")
+
+        in_yan = cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]
+        st.markdown(f"День: **{in_yan.capitalize()}**")
+
+        st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
+        st.markdown("--"*80)
+
+
+
+        # Считаем лунную стоянку
+        for k, v in moon_palace.items():
+            if our_date.year in v:
+                first_step = k
+        if (our_date.year in vis_yaer) & (pd.to_datetime(our_date) > pd.to_datetime(f"{our_date.year}-02-28")):
+            first_step = first_step+1
+
+        lunar_day = first_step + sec_step[our_date.month]+ our_date.day
+
+        while lunar_day > 28:
+            lunar_day+=-28
+        if lunar_day in range(1, 15):
+            lunar_day_ton = lunar_day+14
+        else:
+            lunar_day_ton = lunar_day-14
+        symbol = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Иероглиф"].values[0]
+        val = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day]["Созвездие"].values[0]
+        point = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][0] + \
+            "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
+
+        st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}**")
+        st.markdown(f"Точки 28 Лунных Стоянок (Ду май): **{point}**")
+        st.markdown("*Техника 28 Лунных Стоянок*")
+
+        st.markdown(f"Помочь выйти событию (седирование) \
+                \nЯн: \t{man[lunar_day-1]}\
+                \nИнь: \t{woman[lunar_day-1]}")
+
+        st.markdown(f"Заставийть выйти событие (тонизация) \
+                \nЯн: \t{man[lunar_day_ton-1]}\
+                \nИнь: \t{woman[lunar_day_ton-1]}")
         
-        if method=="ЛИН ГУЙ БА ФА":
-            for_lin_gui_ba_fa = pd.read_csv("data/for_lin_gui_ba_fa.csv")
-            # current_hour = re.search(r"(\d*)", CURRENT_TIME_SOLAR)[0]
+        st.markdown("--"*80)
 
 
-            linguibafa = []
-            for i in feitenbafa_day.index:
-                summ = sky_hands[sky_hands['Иероглиф']==day_iero[0]]['i_day'].values[0] + \
-                            sky_hands[sky_hands['Иероглиф']==feitenbafa_day.iloc[i, 0]]['i_hour'].values[0] + \
-                            earth_legs[earth_legs['Иероглиф']==day_iero[1]]['j_day'].values[0] + \
-                            earth_legs[earth_legs['Иероглиф']==feitenbafa_day.iloc[i, 1]]['j_hour'].values[0]
 
-                if cicle[cicle['Иероглиф']==day_iero]['инь_ян'].values[0] == 'ян':
-                    res = summ%9
-                    if res == 0:
-                        res = 9
-                else:
-                    res = summ%6
-                    if res == 0:
-                        res = 6  
+        # Определяем сезон по дате
+        if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
+            season = seasons.iloc[23][["Символ", "Название", "Иероглиф",	"Месяц", "Точки_Жэнь_май",	"Название_точки"]].values
+        else:
+            for d in range(24):
+                if (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][d])) & (pd.to_datetime(our_date)<pd.to_datetime(seasons[str(our_date.year)][d+1])):
+                    season = seasons.iloc[d][["Символ", "Название", "Иероглиф",	"Месяц", "Точки_Жэнь_май",	"Название_точки"]].values
+                    break
+        st.markdown(f"*Точки 24 Сезонов (Жэнь май)* || **{' '.join(season[-2:]).strip()}**")
+        st.markdown("--"*80)
+        dow_dict = {0:"Понедельник", 1:"Вторник", 
+                2:"Среда", 3:"Четверг",
+                4:"Пятница", 5:"Суббота", 6:"Воскресенье"}
+
+
+
+        st.markdown(f"День недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**")
+        st.markdown("--"*80)
+
+        planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
+        st.markdown(f"Планета-покровитель: **{planet.capitalize()}**")
+        st.markdown("--"*80)
+
+
+
+        method = st.selectbox(
+                "Выберете метод лечения",
+                (" ", "ФЭЙ ТЭН БА ФА", "ЛИН ГУЙ БА ФА", "ТАЙ ЯН БА ФА", "ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА"))
+        
+
+
+        if method:
+            if method=="ФЭЙ ТЭН БА ФА":
+        
                     
-                linguibafa_lst = list(feitenbafa_day.iloc[i,:3].values)
-                linguibafa_lst.extend(for_lin_gui_ba_fa[for_lin_gui_ba_fa['res']==res].values[0][1:])
-                linguibafa.append(linguibafa_lst)
+                st.markdown(" || ".join(current_hour_china_list[1:]))
+                
+                feitenbafa_day_disp = feitenbafa_day.iloc[:, 1:].T
+                feitenbafa_day_disp.to_csv("data/feitenbafa_day_disp.csv", index=False)
+                feitenbafa_day_disp = pd.read_csv("data/feitenbafa_day_disp.csv", header=1)
+                n=90
+                st.dataframe(
+                    feitenbafa_day_disp,
+                    column_config= {
+                        feitenbafa_day_disp.columns[0]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[1]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[2]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[3]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[4]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[5]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[6]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[7]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[8]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[9]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[10]:st.column_config.Column(width=n),
+                        feitenbafa_day_disp.columns[11]:st.column_config.Column(width=n),
+                    },
+                    hide_index=True
+                )
+            
+            
+            if method=="ЛИН ГУЙ БА ФА":
+                for_lin_gui_ba_fa = pd.read_csv("data/for_lin_gui_ba_fa.csv")
+                # current_hour = re.search(r"(\d*)", CURRENT_TIME_SOLAR)[0]
+
+
+                linguibafa = []
+                for i in feitenbafa_day.index:
+                    summ = sky_hands[sky_hands['Иероглиф']==day_iero[0]]['i_day'].values[0] + \
+                                sky_hands[sky_hands['Иероглиф']==feitenbafa_day.iloc[i, 0]]['i_hour'].values[0] + \
+                                earth_legs[earth_legs['Иероглиф']==day_iero[1]]['j_day'].values[0] + \
+                                earth_legs[earth_legs['Иероглиф']==feitenbafa_day.iloc[i, 1]]['j_hour'].values[0]
+
+                    if cicle[cicle['Иероглиф']==day_iero]['инь_ян'].values[0] == 'ян':
+                        res = summ%9
+                        if res == 0:
+                            res = 9
+                    else:
+                        res = summ%6
+                        if res == 0:
+                            res = 6  
+                        
+                    linguibafa_lst = list(feitenbafa_day.iloc[i,:3].values)
+                    linguibafa_lst.extend(for_lin_gui_ba_fa[for_lin_gui_ba_fa['res']==res].values[0][1:])
+                    linguibafa.append(linguibafa_lst)
+
+                    
+                linguibafa_df = pd.DataFrame(
+                    data=linguibafa,
+                    columns=[feitenbafa_day.columns[0], feitenbafa_day.columns[1], feitenbafa_day.columns[2],"Канал", "Точка", "Название_точки"]
+                )
+
+
+                linguibafa_df[linguibafa_df.columns[1:]].T.to_csv("data/linguibafa_df_disp.csv", index=False)
+                linguibafa_df_disp = pd.read_csv("data/linguibafa_df_disp.csv", header=1)
+
+
+                linguibafa_current_hour = linguibafa_df[linguibafa_df['Иероглиф']==current_hour_china[1]]
+                st.markdown(" || ".join(linguibafa_current_hour.iloc[0,1:].values.tolist()))
+                st.dataframe(
+                    linguibafa_df_disp,
+                    hide_index=True
+                )
+
+
+
+
+            if method=="ТАЙ ЯН БА ФА":
+                list_tai = os.listdir("data/tai_yan_ba_fa/")
+                for l in list_tai:
+                    if day_iero[0] in l:
+                        file=re.findall(f'(\w*{day_iero[0]}\w*.csv)', l)
+                
+                tai_yan_ba_fa = pd.read_csv(f"data/tai_yan_ba_fa/{file[0]}")
+
+                current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
+                                                        tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
 
                 
-            linguibafa_df = pd.DataFrame(
-                data=linguibafa,
-                columns=[feitenbafa_day.columns[0], feitenbafa_day.columns[1], feitenbafa_day.columns[2],"Канал", "Точка", "Название_точки"]
-            )
-
-
-            linguibafa_df[linguibafa_df.columns[1:]].T.to_csv("data/linguibafa_df_disp.csv", index=False)
-            linguibafa_df_disp = pd.read_csv("data/linguibafa_df_disp.csv", header=1)
-
-
-            linguibafa_current_hour = linguibafa_df[linguibafa_df['Иероглиф']==current_hour_china[1]]
-            st.markdown(" || ".join(linguibafa_current_hour.iloc[0,1:].values.tolist()))
-            st.dataframe(
-                linguibafa_df_disp,
-                hide_index=True
-            )
-
-
-
-
-        if method=="ТАЙ ЯН БА ФА":
-            list_tai = os.listdir("data/tai_yan_ba_fa/")
-            for l in list_tai:
-                if day_iero[0] in l:
-                    file=re.findall(f'(\w*{day_iero[0]}\w*.csv)', l)
-            
-            tai_yan_ba_fa = pd.read_csv(f"data/tai_yan_ba_fa/{file[0]}")
-
-            current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
-                                                     tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
-
-            
-            st.markdown("На текущий час:")
-            st.dataframe(
-                current_hour_taiyan,
-                hide_index=True,
-                use_container_width=True
-            )
-
-            if st.checkbox("Показать рассчёт на всю дату"):
-                st.markdown("На день:")
+                st.markdown("На текущий час:")
                 st.dataframe(
-                    tai_yan_ba_fa,
+                    current_hour_taiyan,
                     hide_index=True,
                     use_container_width=True
                 )
 
+                if st.checkbox("Показать рассчёт на всю дату"):
+                    st.markdown("На день:")
+                    st.dataframe(
+                        tai_yan_ba_fa,
+                        hide_index=True,
+                        use_container_width=True
+                    )
 
-        
-        if method=="ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА":
-            da_syao = pd.read_csv("data/da_syao.csv")
-            current_hour_china_list = da_syao[current_hour_china[1]].to_list()
+
             
-            st.markdown(" || ".join(current_hour_china_list))
-            
-            if st.checkbox("Показать рассчёт на всю дату"):
-                st.markdown("На день:")
-                st.dataframe(
-                    da_syao,
-                    hide_index=True,
-                    use_container_width=True
-                )
+            if method=="ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА":
+                da_syao = pd.read_csv("data/da_syao.csv")
+                current_hour_china_list = da_syao[current_hour_china[1]].to_list()
+                
+                st.markdown(" || ".join(current_hour_china_list))
+                
+                if st.checkbox("Показать рассчёт на всю дату"):
+                    st.markdown("На день:")
+                    st.dataframe(
+                        da_syao,
+                        hide_index=True,
+                        use_container_width=True
+                    )
     
     
     
