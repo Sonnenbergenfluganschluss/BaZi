@@ -285,7 +285,7 @@ if city :
         st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
         st.markdown("--"*80)
 
-
+        ##########################
 
         method = st.selectbox(
                 "Выберете метод хронопунктуры",
