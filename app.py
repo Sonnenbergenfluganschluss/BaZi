@@ -223,8 +223,6 @@ if our_date:
     day_predictions = feitenbafa.merge(for_feitenbafa.rename(columns={"Иероглиф":day_iero[0]}))
     feitenbafa_day = day_predictions[[day_iero[0], 'Иероглиф',	'Время',	'Канал',	'Точки']]
 
-    st.markdown("**:violet[ФЭЙ ТЭН БА ФА]**")
-
     current_hour = re.search(r"(\d*)", CURRENT_TIME_SOLAR)[0]
 
     # Определяем час по текущему времени.
