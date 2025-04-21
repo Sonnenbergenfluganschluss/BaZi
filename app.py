@@ -252,11 +252,13 @@ if city :
         current_hour_china = ''.join(current_hour_china_list[:2])
 
         st.markdown(f"**{vis_date}** день: **{day}**")
-
+        srt_1 = f"День: **{day}**"
         in_yan = cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]
         st.markdown(f"День: **{in_yan.capitalize()}**")
+        str_2 = in_yan.capitalize()
 
         st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
+        str_3 = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
         st.markdown("--"*80)
 
 
@@ -271,6 +273,7 @@ if city :
 
         st.markdown("*Точки 24 Сезонов (Жэнь май):*")
         st.markdown(f"**:blue[{'  ||  '.join(season).strip()}]**")
+        str_4 = '  ||  '.join(season).strip()
         st.markdown("--"*80)
         dow_dict = {0:"Понедельник", 1:"Вторник", 
                 2:"Среда", 3:"Четверг",
@@ -279,11 +282,15 @@ if city :
 
 
         st.markdown(f"День недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**")
+        str_5 = dow_dict[pd.to_datetime(our_date).day_of_week]
         st.markdown("--"*80)
 
         planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
         st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
+        str_6 = planet.capitalize()
         st.markdown("--"*80)
+
+
 
         ##########################
 
@@ -412,9 +419,16 @@ if city :
                 
                 tai_yan_ba_fa = pd.read_csv(f"data/tai_yan_ba_fa/{file[0]}")
 
-                current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
-                                                        tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
-
+                st.markdown(current_hour_china[1])
+                st.markdown(tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]])
+                st.markdown()
+                st.markdown()
+                st.markdown()
+                try:
+                    current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
+                                                             tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
+                except:
+                    current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:]
                 
                 st.markdown("На текущий час:")
                 st.dataframe(
