@@ -419,11 +419,6 @@ if city :
                 
                 tai_yan_ba_fa = pd.read_csv(f"data/tai_yan_ba_fa/{file[0]}")
 
-                st.markdown(current_hour_china[1])
-                st.markdown(tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]])
-                st.markdown()
-                st.markdown()
-                st.markdown()
                 try:
                     current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
                                                              tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
