@@ -324,7 +324,7 @@ if city :
                     "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
 
                 st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}** \
-                                Точки 28 Лунных Стоянок (Ду май): **{point}**")
+                                \nТочки 28 Лунных Стоянок (Ду май): **{point}**")
                 
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
