@@ -329,12 +329,12 @@ if city :
 
 
                 st.markdown(f"Помочь выйти событию (седирование) \
-                        \nЯн \t:green[{man[lunar_day-1]}]\
-                        \nИнь \t:green[{woman[lunar_day-1]}]")
+                        \nЯн \t**:green[{man[lunar_day-1]}]**\
+                        \nИнь \t**:green[{woman[lunar_day-1]}]**")
 
                 st.markdown(f"Заставийть выйти событие (тонизация) \
-                        \nЯн: \t:green[{man[lunar_day_ton-1]}]\
-                        \nИнь: \t:green[{woman[lunar_day_ton-1]}]")
+                        \nЯн: \t**:green[{man[lunar_day_ton-1]}]**\
+                        \nИнь: \t**:green[{woman[lunar_day_ton-1]}]**")
 
         if method:
             if method=="ФЭЙ ТЭН БА ФА":
