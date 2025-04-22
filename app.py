@@ -179,15 +179,14 @@ if city :
 
     st.markdown("Рассчет по умолчанию выполняется по солнечному времени. \
                 Если нужен рассчет по времени административному, поставьте галочкуниже:")
+    
     if st.checkbox("##### Нужен расчёт по административному времени"):
         our_time = CURRENT_TIME
     else:
         our_time = CURRENT_TIME_SOLAR
 
     CURRENT_TIME_SOLAR = our_time
-    st.markdown(CURRENT_TIME_SOLAR)    
-
-    st.markdown("--"*80)
+    st.markdown(CURRENT_TIME_SOLAR) 
 
     # Вводим дату рождения
     our_date = st.text_input(':orange[Введите интересующую дату в формате дд.мм.гггг]', '')
