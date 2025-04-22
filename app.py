@@ -323,10 +323,10 @@ if city :
                 point = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][0] + \
                     "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
 
-                st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}**")
-                st.markdown(f"Точки 28 Лунных Стоянок (Ду май): **{point}**")
+                st.markdown(f"Лунная стоянка: **{str(lunar_day)} :red[{symbol}] {val.capitalize()}** \
+                                Точки 28 Лунных Стоянок (Ду май): **{point}**")
+                
                 st.markdown("*Техника 28 Лунных Стоянок*")
-
 
                 st.markdown(f"Помочь выйти событию (седирование) \
                         \nЯн \t**:green[{man[lunar_day-1]}]**\
