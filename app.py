@@ -253,17 +253,9 @@ if city :
 
         current_hour_china = ''.join(current_hour_china_list[:2])
 
-        # st.markdown(f"**{vis_date}** день: **{day}**")
-        # srt_1 = f"День: **{day}**"
+        # Инь-ян
         in_yan = cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]
-        # st.markdown(f"День: **{in_yan.capitalize()}**")
-        # str_2 = in_yan.capitalize()
-
-        # st.markdown(f"ЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**")
-        # str_3 = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
-        # st.markdown("--"*80)
-
-
+       
         # Определяем сезон по дате
         if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
             season = seasons.iloc[23][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
@@ -274,42 +266,20 @@ if city :
                     season = seasons.iloc[d][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
                     n_season = seasons.iloc[d][['Сезон']].values[0]
                     break
-
-        # st.markdown("*Точки 24 Сезонов (Жэнь май):*")
-        # st.markdown(f"**:blue[{'  ||  '.join(season).strip()}]**")
-        # str_4 = '  ||  '.join(season).strip()
-        # st.markdown("--"*80)
+        
+        # Определяем день недели
         dow_dict = {0:"Понедельник", 1:"Вторник", 
                 2:"Среда", 3:"Четверг",
                 4:"Пятница", 5:"Суббота", 6:"Воскресенье"}
 
-        # st.markdown(f"День недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**")
-        # str_5 = dow_dict[pd.to_datetime(our_date).day_of_week]
-
+        # Планета-покровитель
         planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
-        # st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
-
-        
-        # Запреты выводим:
-        # string_1 = ''
-        # for s in sky_hands[sky_hands['Иероглиф']==day_iero[0]][['канал', 'сторона_тела']].values[0]:
-        #     string_1 += s + ' '
-        # string_1 = string_1 + 'сторона тела'
-
-        # string_2 = ''
-        # for s in earth_legs[earth_legs['Иероглиф']==day_iero[1]][['канал', 'сторона_тела']].values[0]:
-        #     string_2 += s + ' '
-        # string_2 = string_2 + 'сторона тела'
-
-        # pd.DataFrame({
-        #     "0":["Запреты на ручные каналы:", "Запреты на ножные каналы:"],
-        #     "1":[string_1, string_2]
-        #     })
-        
+       
         # Цзя Цзы
         zya_zy = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
 
 
+        # Запреты выводим:
         # Дни небесного запрета
         day_sky_veto = pd.read_csv("data/day_sky_veto.csv")
         id_v = day_sky_veto[day_sky_veto['сезон']==n_season].index
@@ -373,23 +343,7 @@ if city :
                 
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
-                ing = 'https://github.com/Sonnenbergenfluganschluss/BaZi/blob/99c32bfa7a2a4533fd77addaf0cf9cb7b7c0f5a1/data/images/in.png'
-                yan = 'https://github.com/Sonnenbergenfluganschluss/BaZi/blob/99c32bfa7a2a4533fd77addaf0cf9cb7b7c0f5a1/data/images/yan.png'
-                df = pd.DataFrame({
-                        "Помочь выйти событию (седирование)":[yan, ing], 
-                        " ":[man[lunar_day-1], woman[lunar_day-1]]
-                    })
-
-                
-
-                st.data_editor(
-                    df,
-                    column_config={
-                        "Помочь выйти событию (седирование)": st.column_config.ImageColumn()
-                    },
-                    hide_index=True,
-                )
-
+               
                 st.markdown(f"Помочь выйти событию (седирование) \
                         \nЯн \t**:green[{man[lunar_day-1]}]**\
                         \nИнь \t**:green[{woman[lunar_day-1]}]**")
@@ -430,9 +384,7 @@ if city :
             
             if method=="ЛИН ГУЙ БА ФА":
                 for_lin_gui_ba_fa = pd.read_csv("data/for_lin_gui_ba_fa.csv")
-                # current_hour = re.search(r"(\d*)", CURRENT_TIME_SOLAR)[0]
-
-
+                
                 linguibafa = []
                 for i in feitenbafa_day.index:
                     summ = sky_hands[sky_hands['Иероглиф']==day_iero[0]]['i_day'].values[0] + \
@@ -472,8 +424,6 @@ if city :
                 )
 
 
-
-
             if method=="ТАЙ ЯН БА ФА":
                 list_tai = os.listdir("data/tai_yan_ba_fa/")
                 for l in list_tai:
@@ -502,7 +452,6 @@ if city :
                         hide_index=True,
                         use_container_width=True
                     )
-
 
             
             if method=="ДА СЯО ЧЖОУ ТЯНЬ ЖЭНЬ ФА":
