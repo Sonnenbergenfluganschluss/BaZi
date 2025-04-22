@@ -95,12 +95,13 @@ def read_files():
     calender = pd.read_csv("data/calender.csv")
     cicle = pd.read_csv("data/cicle.csv")
     seasons = pd.read_csv("data/seasons.csv")
-    return cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons
+    veto = pd.read_csv("data/veto.csv")
+    return cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons, veto
 
 
 ########################################  Создаём приложение ######################################
 
-cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons = read_files()
+cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons, veto = read_files()
 calender['date'] = pd.to_datetime(calender['date'])
 
 st.title("Калькулятор Ба Цзы")
@@ -230,7 +231,7 @@ if city :
         except:
             st.error("Некорректная дата. Попробуйте снова")
             
-        
+    try:    
         feitenbafa = pd.read_csv("data/feitenbafa.csv")
         for_feitenbafa = pd.read_csv("data/for_feitenbafa.csv")
 
@@ -266,10 +267,12 @@ if city :
         # Определяем сезон по дате
         if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
             season = seasons.iloc[23][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
+            n_season = seasons.iloc[d][['Сезон']].values[0]
         else:
             for d in range(24):
                 if (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][d])) & (pd.to_datetime(our_date)<pd.to_datetime(seasons[str(our_date.year)][d+1])):
                     season = seasons.iloc[d][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
+                    n_season = seasons.iloc[d][['Сезон']].values[0]
                     break
 
         # st.markdown("*Точки 24 Сезонов (Жэнь май):*")
@@ -286,12 +289,53 @@ if city :
         planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
         # st.markdown(f"Планета-покровитель: **:green[{planet.capitalize()}]**")
 
+        
+        # Запреты выводим:
+        # string_1 = ''
+        # for s in sky_hands[sky_hands['Иероглиф']==day_iero[0]][['канал', 'сторона_тела']].values[0]:
+        #     string_1 += s + ' '
+        # string_1 = string_1 + 'сторона тела'
+
+        # string_2 = ''
+        # for s in earth_legs[earth_legs['Иероглиф']==day_iero[1]][['канал', 'сторона_тела']].values[0]:
+        #     string_2 += s + ' '
+        # string_2 = string_2 + 'сторона тела'
+
+        # pd.DataFrame({
+        #     "0":["Запреты на ручные каналы:", "Запреты на ножные каналы:"],
+        #     "1":[string_1, string_2]
+        #     })
+        
+        # Цзя Цзы
+        zya_zy = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
+
+
+        # Дни небесного запрета
+        day_sky_veto = pd.read_csv("data/day_sky_veto.csv")
+        id_v = day_sky_veto[day_sky_veto['сезон']==n_season].index
+        if ((day_iero[0]=='戊') or (day_iero[0]=='己')) and ((zya_zy==day_sky_veto.iloc[id_v, 1].values[0]) or (zya_zy==day_sky_veto.iloc[id_v, 2].values[0])):
+            str_veto = f":red[{day_sky_veto.iloc[id_v, 3].values[0]} а также Точки инь и ян каналов в области живота (ниже диафрагмы)]"
+        elif (day_iero[0]=='戊') or (day_iero[0]=='己'):
+            str_veto = ":red[Точки инь и ян каналов в области живота (ниже диафрагмы)]"
+        elif (zya_zy==day_sky_veto.iloc[id_v, 1].values[0]) or (zya_zy==day_sky_veto.iloc[id_v, 2].values[0]):
+            str_veto = f":red[{day_sky_veto.iloc[id_v, 3].values[0]}]"
+        else:
+            str_veto = ":green[Запрета нет.]"
+
+        
+        
         st.markdown(f"**{vis_date}** день: **{day}**\
                     \nДень: **{in_yan.capitalize()}**\
-                    \nЦзяЦзы дня: № **:blue[{cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]}]**\
+                    \nЦзяЦзы дня: № **:blue[{zya_zy}]**\
                     \nТочки 24 Сезонов (Жэнь май): \t**:blue[{'  ||  '.join(season).strip()}]**\
                     \nДень недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**\
-                    \nПланета-покровитель: **:green[{planet.capitalize()}]**")
+                    \nПланета-покровитель: **:green[{planet.capitalize()}]**\
+                    \nЗапрет по 4 сезонам: **{veto[veto['месяц']==month_iero[1]]['запрет'].values[0]}**\
+                    \nЗапреты на ручные каналы:  **:red[{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['канал'].values[0]}]**, \
+                            **{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['сторона_тела'].values[0]} сторона тела**\
+                    \nЗапреты на ножные каналы:  **:red[{earth_legs[earth_legs['Иероглиф']==day_iero[1]]['канал'].values[0]}]**, \
+                            **{earth_legs[earth_legs['Иероглиф']==day_iero[1]]['сторона_тела'].values[0]} сторона тела**\
+                    \nДни небесного запрета: **{str_veto}**")
 
 
 
@@ -303,6 +347,7 @@ if city :
         
         if method:
             if method=="ЛУННЫЕ ДВОРЦЫ":
+
                 # Считаем лунную стоянку
                 for k, v in moon_palace.items():
                     if our_date.year in v:
@@ -328,6 +373,13 @@ if city :
                 
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
+              
+                # st.dataframe(
+                #     pd.DataFrame({
+                #         " ":["Помочь выйти событию (седирование)", yan, ing], 
+                #         "  ":[" ", man[lunar_day-1], woman[lunar_day-1]]
+                #     })
+                # )
                 st.markdown(f"Помочь выйти событию (седирование) \
                         \nЯн \t**:green[{man[lunar_day-1]}]**\
                         \nИнь \t**:green[{woman[lunar_day-1]}]**")
@@ -456,3 +508,6 @@ if city :
                         hide_index=True,
                         use_container_width=True
                     )
+    
+    except:
+        st.warning("Чего-то не хватает! Попробуйте ввести данные заново.")
