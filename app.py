@@ -373,13 +373,23 @@ if city :
                 
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
-              
-                # st.dataframe(
-                #     pd.DataFrame({
-                #         " ":["Помочь выйти событию (седирование)", yan, ing], 
-                #         "  ":[" ", man[lunar_day-1], woman[lunar_day-1]]
-                #     })
-                # )
+                ing = 'https://github.com/Sonnenbergenfluganschluss/BaZi/blob/99c32bfa7a2a4533fd77addaf0cf9cb7b7c0f5a1/data/images/in.png'
+                yan = 'https://github.com/Sonnenbergenfluganschluss/BaZi/blob/99c32bfa7a2a4533fd77addaf0cf9cb7b7c0f5a1/data/images/yan.png'
+                df = pd.DataFrame({
+                        "Помочь выйти событию (седирование)":[yan, ing], 
+                        " ":[man[lunar_day-1], woman[lunar_day-1]]
+                    })
+
+                
+
+                st.data_editor(
+                    df,
+                    column_config={
+                        "Помочь выйти событию (седирование)": st.column_config.ImageColumn()
+                    },
+                    hide_index=True,
+                )
+
                 st.markdown(f"Помочь выйти событию (седирование) \
                         \nЯн \t**:green[{man[lunar_day-1]}]**\
                         \nИнь \t**:green[{woman[lunar_day-1]}]**")
