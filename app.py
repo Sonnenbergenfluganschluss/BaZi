@@ -348,7 +348,7 @@ if city :
                         \nЯн \t**:green[{man[lunar_day-1]}]**\
                         \nИнь \t**:green[{woman[lunar_day-1]}]**")
 
-                st.markdown(f"Заставийть выйти событие (тонизация) \
+                st.markdown(f"Заставить выйти событие (тонизация) \
                         \nЯн: \t**:green[{man[lunar_day_ton-1]}]**\
                         \nИнь: \t**:green[{woman[lunar_day_ton-1]}]**")
 
