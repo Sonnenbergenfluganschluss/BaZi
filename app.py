@@ -1,6 +1,7 @@
 
 import streamlit as st
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta, date
 import re
 import os
@@ -99,6 +100,8 @@ def read_files():
     return cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons, veto
 
 
+def background(color):
+    return np.where(f"color: {color};", None)
 ########################################  Создаём приложение ######################################
 
 cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons, veto = read_files()
@@ -461,11 +464,12 @@ if city :
                 st.markdown(" || ".join(current_hour_china_list))
                 
                 if st.checkbox("Показать рассчёт на всю дату"):
+                    df = da_syao.style.map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1])
                     st.markdown("На день:")
                     st.dataframe(
-                        da_syao,
+                        df,
                         hide_index=True,
-                        use_container_width=True
+                        use_container_width=True,
                     )
     
     except:
