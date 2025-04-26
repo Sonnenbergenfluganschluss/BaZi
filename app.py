@@ -289,8 +289,9 @@ if city :
         day_sky_veto = pd.read_csv("data/day_sky_veto.csv")
         id_v = day_sky_veto[day_sky_veto['сезон']==n_season].index
         if ((day_iero[0]=='戊') or (day_iero[0]=='己')) and ((zya_zy==day_sky_veto.iloc[id_v, 1].values[0]) or (zya_zy==day_sky_veto.iloc[id_v, 2].values[0])):
-            str_veto = f"1) :red[{day_sky_veto.iloc[id_v, 3].values[0]} \
-                \n2) Точки инь и ян каналов в области живота (ниже диафрагмы)]"
+            str_veto = f"\
+                \n1 :red[{day_sky_veto.iloc[id_v, 3].values[0]}] \
+                \n2 :red[Точки инь и ян каналов в области живота (ниже диафрагмы)]"
         elif (day_iero[0]=='戊') or (day_iero[0]=='己'):
             str_veto = ":red[Точки инь и ян каналов в области живота (ниже диафрагмы)]"
         elif (zya_zy==day_sky_veto.iloc[id_v, 1].values[0]) or (zya_zy==day_sky_veto.iloc[id_v, 2].values[0]):
@@ -305,12 +306,14 @@ if city :
                     \nТочки 24 Сезонов (Жэнь май): \t**:blue[{'  ||  '.join(season).strip()}]**\
                     \nДень недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**\
                     \nПланета-покровитель: **:green[{planet.capitalize()}]**\
-                    \nЗапрет по 4 сезонам: **{veto[veto['месяц']==month_iero[1]]['запрет'].values[0]}**\
-                    \nЗапреты на ручные каналы:  **:red[{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['канал'].values[0]}]**, \
+                    \n*Запрет по 4 сезонам:* **{veto[veto['месяц']==month_iero[1]]['запрет'].values[0]}**\
+                    \n*Запреты на ручные каналы:*\
+                    \n  **:red[{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['канал'].values[0]}]**, \
                             **{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['сторона_тела'].values[0]} сторона:  пять точек транспортировки и точки между ними (до локтя)**\
-                    \nЗапреты на ножные каналы:  **:red[{earth_legs[earth_legs['Иероглиф']==month_iero[1]]['канал'].values[0]}]**, \
+                    \n*Запреты на ножные каналы:*\
+                    \n  **:red[{earth_legs[earth_legs['Иероглиф']==month_iero[1]]['канал'].values[0]}]**, \
                             **{earth_legs[earth_legs['Иероглиф']==day_iero[1]]['сторона_тела'].values[0]} сторона: пять точек транспортировки и точки между ними (до колена)**\
-                    \nДни небесного запрета: **{str_veto}**")
+                    \n*Дни небесного запрета:* {str_veto}")
 
 
 
