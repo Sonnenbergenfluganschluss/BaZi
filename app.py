@@ -132,15 +132,15 @@ if birthday:
 
         birthday_df = pd.DataFrame(columns=["День", "Месяц", "Год"])
         birthday_df["День"] = [
-            f"{cicle[cicle['Название_calender'] == day_v]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == day_v]['инь_ян'].values[0]}",
+            f"{cicle[cicle['Название_calender'] == day_v]['Название_Русский'].values[0]}",
             day_ier
         ]
         birthday_df["Месяц"] = [
-            f"{cicle[cicle['Название_calender'] == month_v]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == month_v]['инь_ян'].values[0]}",
+            f"{cicle[cicle['Название_calender'] == month_v]['Название_Русский'].values[0]}",
             month_ier
         ]
         birthday_df["Год"] = [
-            f"{cicle[cicle['Название_calender'] == year_v]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == year_v]['инь_ян'].values[0]}",
+            f"{cicle[cicle['Название_calender'] == year_v]['Название_Русский'].values[0]}",
             year_ier
         ]
         st.dataframe(birthday_df, hide_index=True, column_config={
@@ -194,17 +194,17 @@ if city :
     CURRENT_TIME_SOLAR = our_time
     st.markdown(f"Рассчётное время: {CURRENT_TIME_SOLAR}") 
 
+    # st.date_input("date_input", format="DD.MM.YYYY")
     # Вводим дату рождения
-    our_date = st.text_input(':orange[Введите интересующую дату в формате дд.мм.гггг]', '')
-    
+    our_date = st.date_input(':orange[Введите интересующую дату в формате дд.мм.гггг]', format="DD.MM.YYYY")
     if our_date:
         try:
-            our_date = vis_date = re.sub('\D', '.', our_date)
-            our_date = our_date.split('.')
-            d = int(our_date[0])
-            m = int(our_date[1])
-            y = int(our_date[2])
-            our_date = date(y, m, d)
+            # our_date = vis_date = re.sub('\D', '.', our_date)
+            # our_date = our_date.split('.')
+            d = int(our_date.day)
+            m = int(our_date.month)
+            y = int(our_date.year)
+            # our_date = date(y, m, d)
 
             year_o = calender[calender['date']==pd.to_datetime(our_date)]['years'].values[0]
             month_o = calender[calender['date']==pd.to_datetime(our_date)]['months'].values[0]
@@ -217,15 +217,15 @@ if city :
 
             our_date_df = pd.DataFrame(columns=["День", "Месяц", "Год"])
             our_date_df["День"] = [
-                f"{cicle[cicle['Название_calender'] == day_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]}",
+                f"{cicle[cicle['Название_calender'] == day_o]['Название_Русский'].values[0]}",
                 day_iero
             ]
             our_date_df["Месяц"] = [
-                f"{cicle[cicle['Название_calender'] == month_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == month_o]['инь_ян'].values[0]}",
+                f"{cicle[cicle['Название_calender'] == month_o]['Название_Русский'].values[0]}",
                 month_iero
             ]
             our_date_df["Год"] = [
-                f"{cicle[cicle['Название_calender'] == year_o]['Название_Русский'].values[0]} {cicle[cicle['Название_calender'] == year_o]['инь_ян'].values[0]}",
+                f"{cicle[cicle['Название_calender'] == year_o]['Название_Русский'].values[0]}",
                 year_iero
             ]
             st.dataframe(our_date_df, hide_index=True, column_config={
@@ -299,8 +299,7 @@ if city :
 
         
         
-        st.markdown(f"**{vis_date}** день: **{day}**\
-                    \nДень: **{in_yan.capitalize()}**\
+        st.markdown(f"День: **{in_yan.capitalize()}**\
                     \nЦзяЦзы дня: № **:blue[{zya_zy}]**\
                     \nТочки 24 Сезонов (Жэнь май): \t**:blue[{'  ||  '.join(season).strip()}]**\
                     \nДень недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**\
@@ -359,8 +358,7 @@ if city :
 
         if method:
             if method=="ФЭЙ ТЭН БА ФА":
-        
-                    
+            
                 st.markdown(" || ".join(current_hour_china_list[1:]))
                 
                 feitenbafa_day_disp = feitenbafa_day.iloc[:, 1:].T
