@@ -147,7 +147,7 @@ if birthday:
             "День":st.column_config.TextColumn(default="st."),
             "Месяц":st.column_config.TextColumn(default="st."),
             "Год":st.column_config.TextColumn(default="st.")
-        }, use_container_width=True)
+        })
     except:
         st.error("Некорректная дата. Попробуйте снова")
 
@@ -262,12 +262,12 @@ if city :
         in_yan = cicle[cicle['Название_calendar'] == day_o]['инь_ян'].values[0]
        
         # Определяем сезон по дате
-        if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
+        if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) >= pd.to_datetime(seasons[str(our_date.year)][23])):
             season = seasons.iloc[23][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
-            n_season = seasons.iloc[d][['Сезон']].values[0]
+            n_season = seasons.iloc[23][['Сезон']].values[0]
         else:
-            for d in range(24):
-                if (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][d])) & (pd.to_datetime(our_date)<pd.to_datetime(seasons[str(our_date.year)][d+1])):
+            for d in range(23):
+                if (pd.to_datetime(our_date) >= pd.to_datetime(seasons[str(our_date.year)][d])) & (pd.to_datetime(our_date)<pd.to_datetime(seasons[str(our_date.year)][d+1])):
                     season = seasons.iloc[d][["Символ", "Название", "Точки_Жэнь_май",	"Название_точки"]].values
                     n_season = seasons.iloc[d][['Сезон']].values[0]
                     break
@@ -289,7 +289,8 @@ if city :
         day_sky_veto = pd.read_csv("data/day_sky_veto.csv")
         id_v = day_sky_veto[day_sky_veto['сезон']==n_season].index
         if ((day_iero[0]=='戊') or (day_iero[0]=='己')) and ((zya_zy==day_sky_veto.iloc[id_v, 1].values[0]) or (zya_zy==day_sky_veto.iloc[id_v, 2].values[0])):
-            str_veto = f":red[{day_sky_veto.iloc[id_v, 3].values[0]} а также Точки инь и ян каналов в области живота (ниже диафрагмы)]"
+            str_veto = f"1) :red[{day_sky_veto.iloc[id_v, 3].values[0]} \
+                \n2) Точки инь и ян каналов в области живота (ниже диафрагмы)]"
         elif (day_iero[0]=='戊') or (day_iero[0]=='己'):
             str_veto = ":red[Точки инь и ян каналов в области живота (ниже диафрагмы)]"
         elif (zya_zy==day_sky_veto.iloc[id_v, 1].values[0]) or (zya_zy==day_sky_veto.iloc[id_v, 2].values[0]):
