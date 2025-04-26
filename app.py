@@ -114,7 +114,7 @@ st.header("")
 st.markdown(f'Сегодня: **{datetime.now().strftime("%d.%m.%Y")}**')
 
 
-birthday =  st.text_input(':orange[Введите дату рождения в формате дд.мм.гггг]', '')
+birthday =  st.date_input(':orange[Введите дату рождения]', format="DD.MM.YYYY")
 
 if birthday:
     try:
@@ -196,7 +196,7 @@ if city :
 
     # st.date_input("date_input", format="DD.MM.YYYY")
     # Вводим дату рождения
-    our_date = st.date_input(':orange[Введите интересующую дату в формате дд.мм.гггг]', format="DD.MM.YYYY")
+    our_date = st.date_input(':orange[Введите интересующую дату]', format="DD.MM.YYYY")
     if our_date:
         try:
             # our_date = vis_date = re.sub('\D', '.', our_date)
