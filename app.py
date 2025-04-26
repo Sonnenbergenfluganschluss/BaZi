@@ -93,19 +93,19 @@ def read_files():
     sky_hands = pd.read_csv("data/sky_hands.csv")
     planets = pd.read_csv("data/planets.csv")
     moon_palace_df = pd.read_csv("data/moon_palace.csv")
-    calender = pd.read_csv("data/calender.csv")
+    calendar = pd.read_csv("data/calendar.csv")
     cicle = pd.read_csv("data/cicle.csv")
     seasons = pd.read_csv("data/seasons.csv")
     veto = pd.read_csv("data/veto.csv")
-    return cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons, veto
+    return cities, earth_legs, sky_hands, planets, moon_palace_df, calendar, cicle, seasons, veto
 
 
 def background(color):
     return np.where(f"color: {color};", None)
 ########################################  Создаём приложение ######################################
 
-cities, earth_legs, sky_hands, planets, moon_palace_df, calender, cicle, seasons, veto = read_files()
-calender['date'] = pd.to_datetime(calender['date'])
+cities, earth_legs, sky_hands, planets, moon_palace_df, calendar, cicle, seasons, veto = read_files()
+calendar['date'] = pd.to_datetime(calendar['date'])
 
 st.title("Калькулятор Ба Цзы")
 
@@ -122,25 +122,25 @@ if birthday:
         birthday = str(pd.to_datetime(birthday, dayfirst=True)).split()[0]
         st.markdown(f'Дата рождения: **{pd.to_datetime(birthday).strftime("%d.%m.%Y")}**')
 
-        year_v = calender[calender['date']==pd.to_datetime(birthday)]['years'].values[0]
-        month_v = calender[calender['date']==pd.to_datetime(birthday)]['months'].values[0]
-        day_v = calender[calender['date']==pd.to_datetime(birthday)]['days'].values[0]
-        day_ier = cicle[cicle["Название_calender"] == day_v]["Иероглиф"].values[0]
-        month_ier = cicle[cicle["Название_calender"] == month_v]["Иероглиф"].values[0]
-        year_ier = cicle[cicle["Название_calender"] == year_v]["Иероглиф"].values[0]
+        year_v = calendar[calendar['date']==pd.to_datetime(birthday)]['years'].values[0]
+        month_v = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
+        day_v = calendar[calendar['date']==pd.to_datetime(birthday)]['days'].values[0]
+        day_ier = cicle[cicle["Название_calendar"] == day_v]["Иероглиф"].values[0]
+        month_ier = cicle[cicle["Название_calendar"] == month_v]["Иероглиф"].values[0]
+        year_ier = cicle[cicle["Название_calendar"] == year_v]["Иероглиф"].values[0]
 
 
         birthday_df = pd.DataFrame(columns=["День", "Месяц", "Год"])
         birthday_df["День"] = [
-            f"{cicle[cicle['Название_calender'] == day_v]['Название_Русский'].values[0]}",
+            f"{cicle[cicle['Название_calendar'] == day_v]['Название_Русский'].values[0]}",
             day_ier
         ]
         birthday_df["Месяц"] = [
-            f"{cicle[cicle['Название_calender'] == month_v]['Название_Русский'].values[0]}",
+            f"{cicle[cicle['Название_calendar'] == month_v]['Название_Русский'].values[0]}",
             month_ier
         ]
         birthday_df["Год"] = [
-            f"{cicle[cicle['Название_calender'] == year_v]['Название_Русский'].values[0]}",
+            f"{cicle[cicle['Название_calendar'] == year_v]['Название_Русский'].values[0]}",
             year_ier
         ]
         st.dataframe(birthday_df, hide_index=True, column_config={
@@ -206,26 +206,26 @@ if city :
             y = int(our_date.year)
             # our_date = date(y, m, d)
 
-            year_o = calender[calender['date']==pd.to_datetime(our_date)]['years'].values[0]
-            month_o = calender[calender['date']==pd.to_datetime(our_date)]['months'].values[0]
-            day_o = calender[calender['date']==pd.to_datetime(our_date)]['days'].values[0]
-            day = cicle[cicle["Название_calender"] == day_o]["Название_Русский"].values[0]
-            day_iero = cicle[cicle["Название_calender"] == day_o]["Иероглиф"].values[0]
-            month_iero = cicle[cicle["Название_calender"] == month_o]["Иероглиф"].values[0]
-            year_iero = cicle[cicle["Название_calender"] == year_o]["Иероглиф"].values[0]
+            year_o = calendar[calendar['date']==pd.to_datetime(our_date)]['years'].values[0]
+            month_o = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
+            day_o = calendar[calendar['date']==pd.to_datetime(our_date)]['days'].values[0]
+            day = cicle[cicle["Название_calendar"] == day_o]["Название_Русский"].values[0]
+            day_iero = cicle[cicle["Название_calendar"] == day_o]["Иероглиф"].values[0]
+            month_iero = cicle[cicle["Название_calendar"] == month_o]["Иероглиф"].values[0]
+            year_iero = cicle[cicle["Название_calendar"] == year_o]["Иероглиф"].values[0]
 
 
             our_date_df = pd.DataFrame(columns=["День", "Месяц", "Год"])
             our_date_df["День"] = [
-                f"{cicle[cicle['Название_calender'] == day_o]['Название_Русский'].values[0]}",
+                f"{cicle[cicle['Название_calendar'] == day_o]['Название_Русский'].values[0]}",
                 day_iero
             ]
             our_date_df["Месяц"] = [
-                f"{cicle[cicle['Название_calender'] == month_o]['Название_Русский'].values[0]}",
+                f"{cicle[cicle['Название_calendar'] == month_o]['Название_Русский'].values[0]}",
                 month_iero
             ]
             our_date_df["Год"] = [
-                f"{cicle[cicle['Название_calender'] == year_o]['Название_Русский'].values[0]}",
+                f"{cicle[cicle['Название_calendar'] == year_o]['Название_Русский'].values[0]}",
                 year_iero
             ]
             st.dataframe(our_date_df, hide_index=True, column_config={
@@ -259,7 +259,7 @@ if city :
         current_hour_china = ''.join(current_hour_china_list[:2])
 
         # Инь-ян
-        in_yan = cicle[cicle['Название_calender'] == day_o]['инь_ян'].values[0]
+        in_yan = cicle[cicle['Название_calendar'] == day_o]['инь_ян'].values[0]
        
         # Определяем сезон по дате
         if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) > pd.to_datetime(seasons[str(our_date.year)][23])):
@@ -281,7 +281,7 @@ if city :
         planet = planets[planets['День_недели']==pd.to_datetime(our_date).day_of_week]['Планета'].values[0]
        
         # Цзя Цзы
-        zya_zy = cicle[cicle['Название_calender'] == day_o]['Цзя_Цзы'].values[0]
+        zya_zy = cicle[cicle['Название_calendar'] == day_o]['Цзя_Цзы'].values[0]
 
 
         # Запреты выводим:
@@ -307,7 +307,7 @@ if city :
                     \nЗапрет по 4 сезонам: **{veto[veto['месяц']==month_iero[1]]['запрет'].values[0]}**\
                     \nЗапреты на ручные каналы:  **:red[{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['канал'].values[0]}]**, \
                             **{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['сторона_тела'].values[0]} сторона тела**\
-                    \nЗапреты на ножные каналы:  **:red[{earth_legs[earth_legs['Иероглиф']==day_iero[1]]['канал'].values[0]}]**, \
+                    \nЗапреты на ножные каналы:  **:red[{earth_legs[earth_legs['Иероглиф']==month_iero[1]]['канал'].values[0]}]**, \
                             **{earth_legs[earth_legs['Иероглиф']==day_iero[1]]['сторона_тела'].values[0]} сторона тела**\
                     \nДни небесного запрета: **{str_veto}**")
 
