@@ -190,7 +190,7 @@ if city :
         our_time = CURRENT_TIME_SOLAR
 
     CURRENT_TIME_SOLAR = our_time
-    st.markdown(CURRENT_TIME_SOLAR) 
+    st.markdown(f"Рассчётное время: {CURRENT_TIME_SOLAR}") 
 
     # Вводим дату рождения
     our_date = st.text_input(':orange[Введите интересующую дату в формате дд.мм.гггг]', '')
@@ -418,11 +418,13 @@ if city :
                 linguibafa_df[linguibafa_df.columns[1:]].T.to_csv("data/linguibafa_df_disp.csv", index=False)
                 linguibafa_df_disp = pd.read_csv("data/linguibafa_df_disp.csv", header=1)
 
-
+                df = linguibafa_df_disp.style.map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1])
+                    
+                
                 linguibafa_current_hour = linguibafa_df[linguibafa_df['Иероглиф']==current_hour_china[1]]
                 st.markdown(" || ".join(linguibafa_current_hour.iloc[0,1:].values.tolist()))
                 st.dataframe(
-                    linguibafa_df_disp,
+                    df,
                     hide_index=True
                 )
 
