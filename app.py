@@ -368,7 +368,7 @@ if city :
                 feitenbafa_day_disp = pd.read_csv("data/feitenbafa_day_disp.csv", header=1)
                 n=90
                 st.dataframe(
-                    feitenbafa_day_disp,
+                    feitenbafa_day_disp.style.map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1]),
                     column_config= {
                         feitenbafa_day_disp.columns[0]:st.column_config.Column(width=n),
                         feitenbafa_day_disp.columns[1]:st.column_config.Column(width=n),
