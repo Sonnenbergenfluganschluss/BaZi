@@ -176,6 +176,7 @@ if city :
 
     CURRENT_TIME = (datetime.utcnow() + timedelta(hours=utc)).time().strftime('%H:%M')
     CURRENT_TIME_SOLAR = (datetime.utcnow() + timedelta(hours=hours, minutes=minutes)).time().strftime('%H:%M')
+    current_time_solar = (datetime.utcnow() + timedelta(hours=hours, minutes=minutes)).time()
 
 
     st.markdown(f"*:rainbow[Текущее административное время]:* **:blue[{CURRENT_TIME}]**")
@@ -434,26 +435,50 @@ if city :
                 for l in list_tai:
                     if day_iero[0] in l:
                         file=re.findall(f'(\w*{day_iero[0]}\w*.csv)', l)
-                
+
                 tai_yan_ba_fa = pd.read_csv(f"data/tai_yan_ba_fa/{file[0]}")
 
-                try:
-                    current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
-                                                             tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
-                except:
-                    current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:]
+                # try:
+                #     current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:
+                #                                                 tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0] + 2]
+                # except:
+                #     current_hour_taiyan = tai_yan_ba_fa.iloc[tai_yan_ba_fa[tai_yan_ba_fa["0"]==current_hour_china[1]].index[0]:]
+                # current_hour_taiyan.rename(columns=current_hour_taiyan.iloc[0]).drop(current_hour_taiyan.index[0])
+
+                for i in tai_yan_ba_fa.index:
+                    for j in tai_yan_ba_fa.columns:
+                        if i%2==0:
+                            tai_yan_ba_fa.iloc[i, int(j)] = tai_yan_ba_fa.iloc[i, int(j)] + " " + tai_yan_ba_fa.iloc[i+1, int(j)]
+                            
+                df = tai_yan_ba_fa.drop(tai_yan_ba_fa.index[range(1,42, 2)], axis=0).reset_index(drop=True)
+                df.iloc[:,0] = df.iloc[:,0].str.strip()
+                df.iloc[:,1] = df.iloc[:,1].str.strip()
+                # df = df.rename(columns=df.iloc[0]).drop(df.index[0])
+
+                for i in df.index:
+                    start_time = datetime(y, m, d, hour=int(df.iloc[i,1].split(" - ")[0].split(".")[0]), minute=int(df.iloc[i,1].split(" - ")[0].split(".")[1])).time()
+                    end_time = datetime(y, m, d, hour=int(df.iloc[i,1].split(" - ")[1].split(".")[0]), minute=int(df.iloc[i,1].split(" - ")[1].split(".")[1])).time()
+                    if (current_time_solar >= start_time) & (current_time_solar < end_time):
+                        ser = " || ".join(df.iloc[i].to_list())
+                        ind = i
+                        break
                 
+                # df.style.set_properties(color="red", align="right")  # doctest: +SKIP
+                df_styled = df.style.set_properties(**{'background-color': 'yellow'}, subset=ind)
+                # df.map(lambda x: "background-color: 'yellow'", subset=current_hour_china[1])                
+
                 st.markdown("На текущий час:")
-                st.dataframe(
-                    current_hour_taiyan,#.rename(columns=current_hour_taiyan.iloc[0]).drop(current_hour_taiyan.index[0]),
-                    hide_index=True,
-                    use_container_width=True
-                )
+                st.markdown(ser)
+                # st.dataframe(
+                #     ser,#.rename(columns=current_hour_taiyan.iloc[0]).drop(current_hour_taiyan.index[0]),
+                #     hide_index=True,
+                #     use_container_width=True
+                # )
 
                 if st.checkbox("Показать рассчёт на всю дату"):
                     st.markdown("На день:")
                     st.dataframe(
-                        tai_yan_ba_fa,
+                        df_styled,
                         hide_index=True,
                         use_container_width=True
                     )
