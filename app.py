@@ -443,7 +443,7 @@ if city :
                 
                 st.markdown("На текущий час:")
                 st.dataframe(
-                    current_hour_taiyan,
+                    current_hour_taiyan,#.rename(columns=current_hour_taiyan.iloc[0]).drop(current_hour_taiyan.index[0]),
                     hide_index=True,
                     use_container_width=True
                 )
