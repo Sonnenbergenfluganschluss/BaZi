@@ -176,7 +176,6 @@ if city :
 
     CURRENT_TIME = (datetime.utcnow() + timedelta(hours=utc)).time().strftime('%H:%M')
     CURRENT_TIME_SOLAR = (datetime.utcnow() + timedelta(hours=hours, minutes=minutes)).time().strftime('%H:%M')
-    current_time_solar = (datetime.utcnow() + timedelta(hours=hours, minutes=minutes)).time()
 
 
     st.markdown(f"*:rainbow[Текущее административное время]:* **:blue[{CURRENT_TIME}]**")
@@ -187,8 +186,10 @@ if city :
     
     if st.checkbox("##### Нужен расчёт по административному времени"):
         our_time = CURRENT_TIME
+        current_time_solar = (datetime.utcnow() + timedelta(hours=utc)).time()
     else:
         our_time = CURRENT_TIME_SOLAR
+        current_time_solar = (datetime.utcnow() + timedelta(hours=hours, minutes=minutes)).time()
 
     CURRENT_TIME_SOLAR = our_time
     st.markdown(f"Рассчётное время: {CURRENT_TIME_SOLAR}") 
