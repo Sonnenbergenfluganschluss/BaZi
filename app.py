@@ -392,8 +392,8 @@ if city :
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
                
-                # df_sed['Помочь выйти событию (седирование)'] = df_img.URL.map(lambda f: get_thumbnail(f))
-                # st.html(df_sed.to_html(formatters={'Помочь выйти событию (седирование)': image_formatter}, escape=False, header= False, index=False, border=0))
+                df_sed['Помочь выйти событию (седирование)'] = df_img.URL.map(lambda f: get_thumbnail(f))
+                st.html(df_sed.to_html(formatters={'Помочь выйти событию (седирование)': image_formatter}, escape=False, header= False, index=False, border=0))
                 st.markdown(f"Помочь выйти событию (седирование) \
                         \nЯн \t**:green[{man[lunar_day-1]}]**\
                         \nИнь \t**:green[{woman[lunar_day-1]}]**")
