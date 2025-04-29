@@ -352,11 +352,9 @@ if city :
                 from PIL import Image
                 from io import BytesIO
                 from IPython.display import HTML
-                # import io
-
-                #pd.set_option('display.max_colwidth', -1)
-                path_yan = 'C:\\Users\\User\\Desktop\\Bogdanov\\SFDS\\BaZi\\data\\images\\yan.png'
-                path_in = 'C:\\Users\\User\\Desktop\\Bogdanov\\SFDS\\BaZi\\data\\images\\in.png'
+                
+                path_yan = 'data\\images\\yan.png'
+                path_in = 'data\\images\\in.png'
 
                 df_img = pd.DataFrame({
                     'URL':[path_yan, path_in],
@@ -373,7 +371,6 @@ if city :
                 })
 
                 def get_thumbnail(path):
-                    # path = "\\\\?\\"+path # This "\\\\?\\" is used to prevent problems with long Windows paths
                     i = Image.open(path)    
                     return i
 
@@ -396,17 +393,17 @@ if city :
                 st.markdown("*Техника 28 Лунных Стоянок*")
 
                
-                st.markdown(f"Помочь выйти событию (седирование)")
-                df_sed['Помочь выйти событию (седирование)'] = df_img.URL.map(lambda f: get_thumbnail(f))
-                st.html(df_sed.to_html(formatters={'Помочь выйти событию (седирование)': image_formatter}, escape=False, header= False, index=False, border=0))
-                        # \nЯн \t**:green[{man[lunar_day-1]}]**\
-                        # \nИнь \t**:green[{woman[lunar_day-1]}]**")
+                # df_sed['Помочь выйти событию (седирование)'] = df_img.URL.map(lambda f: get_thumbnail(f))
+                # st.html(df_sed.to_html(formatters={'Помочь выйти событию (седирование)': image_formatter}, escape=False, header= False, index=False, border=0))
+                st.markdown(f"Помочь выйти событию (седирование) \
+                        \nЯн \t**:green[{man[lunar_day-1]}]**\
+                        \nИнь \t**:green[{woman[lunar_day-1]}]**")
 
-                st.markdown(f"Заставить выйти событие (тонизация)")
-                df_ton['Заставить выйти событие (тонизация)'] = df_img.URL.map(lambda f: get_thumbnail(f))
-                st.html(df_ton.to_html(formatters={'Заставить выйти событие (тонизация)': image_formatter}, escape=False, header= False, index=False, border=0))
-                        # \nЯн: \t**:green[{man[lunar_day_ton-1]}]**\
-                        # \nИнь: \t**:green[{woman[lunar_day_ton-1]}]**")
+                # df_ton['Заставить выйти событие (тонизация)'] = df_img.URL.map(lambda f: get_thumbnail(f))
+                # st.html(df_ton.to_html(formatters={'Заставить выйти событие (тонизация)': image_formatter}, escape=False, header= False, index=False, border=0))
+                st.markdown(f"Заставить выйти событие (тонизация)\
+                        \nЯн: \t**:green[{man[lunar_day_ton-1]}]**\
+                        \nИнь: \t**:green[{woman[lunar_day_ton-1]}]**")
                 
                 
                 
