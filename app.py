@@ -346,43 +346,42 @@ if city :
                 point = moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][0] + \
                     "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
 
-                # import base64
-                # import pandas as pd
+                import base64
 
-                # from PIL import Image
-                # from io import BytesIO
+                from PIL import Image
+                from io import BytesIO
                 # from IPython.display import HTML
                 
-                # path_yan = 'data\\images\\yan.png'
-                # path_in = 'data\\images\\in.png'
+                path_yan = 'data\\images\\yan.png'
+                path_in = 'data\\images\\in.png'
 
-                # df_img = pd.DataFrame({
-                #     'URL':[path_yan, path_in],
-                # })
+                df_img = pd.DataFrame({
+                    'URL':[path_yan, path_in],
+                })
                 
-                # df_sed = pd.DataFrame({
-                #     'Помочь выйти событию (седирование)': [" ", " "],
-                #     'Точки':[man[lunar_day-1], woman[lunar_day-1]]    
-                # })
+                df_sed = pd.DataFrame({
+                    'Помочь выйти событию (седирование)': [" ", " "],
+                    'Точки':[man[lunar_day-1], woman[lunar_day-1]]    
+                })
                 
-                # df_ton = pd.DataFrame({
-                #     'Заставить выйти событие (тонизация)': [" ", " "],
-                #     'Точки':[man[lunar_day_ton-1], woman[lunar_day_ton-1]]    
-                # })
+                df_ton = pd.DataFrame({
+                    'Заставить выйти событие (тонизация)': [" ", " "],
+                    'Точки':[man[lunar_day_ton-1], woman[lunar_day_ton-1]]    
+                })
 
-                # def get_thumbnail(path):
-                #     i = Image.open(path)    
-                #     return i
+                def get_thumbnail(path):
+                    i = Image.open(path)    
+                    return i
 
-                # def image_base64(im):
-                #     if isinstance(im, str):
-                #         im = get_thumbnail(im)
-                #     with BytesIO() as buffer:
-                #         im.save(buffer, 'png')
-                #         return base64.b64encode(buffer.getvalue()).decode()
+                def image_base64(im):
+                    if isinstance(im, str):
+                        im = get_thumbnail(im)
+                    with BytesIO() as buffer:
+                        im.save(buffer, 'png')
+                        return base64.b64encode(buffer.getvalue()).decode()
 
-                # def image_formatter(im):
-                #     return f'<img src="data:image/png;base64,{image_base64(im)}">'
+                def image_formatter(im):
+                    return f'<img src="data:image/png;base64,{image_base64(im)}">'
 
 
                 
