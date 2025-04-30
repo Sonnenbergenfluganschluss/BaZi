@@ -347,12 +347,11 @@ if city :
                     "||" + moon_palace_df[moon_palace_df["Лунный_день"]==lunar_day][["Точка_Ду_май", "Название"]].values[0][1]
 
                 import base64
-
                 from PIL import Image
                 from io import BytesIO
                 
-                path_yan = 'data\\images\\yan.png'
-                path_in = 'data\\images\\in.png'
+                path_yan = 'data/images/yan.png'
+                path_in = 'data/images/in.png'
 
                 df_img = pd.DataFrame({
                     'URL':[path_yan, path_in],
