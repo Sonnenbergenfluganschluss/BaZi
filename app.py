@@ -6,6 +6,8 @@ from datetime import datetime, timedelta, date
 import re
 import os
 import pytz
+from itertools import cycle
+
 
 animal = ["крыса", "бык", "тигр", "кролик", "дракон", "змея", "лошадь", "коза", "обезьяна", "петух", "собака", "свинья"]
 stihiya = ["дерево", "дерево", "огонь", "огонь", "почва", "почва",  "металл",  "металл", "вода", "вода"]
@@ -102,6 +104,17 @@ def read_files():
 
 def background(color):
     return np.where(f"color: {color};", None)
+
+def get_month(our_date):
+    stih = cycle(stihiya)
+    anim = cycle(animal)
+    inyan = cycle(in_yan)  
+    start_month = date(1924, 1, 1)
+    end_months=(our_date.year-start_month.year)*12 + our_date.month + 1
+    lst = []
+    for i in range(end_months):
+        lst.append(f"{next(anim)} {next(inyan)} {next(stih)}".capitalize())
+    return lst[-1]
 ########################################  Создаём приложение ######################################
 
 cities, earth_legs, sky_hands, planets, moon_palace_df, calendar, cicle, seasons, veto = read_files()
@@ -123,7 +136,11 @@ if birthday:
         st.markdown(f'Дата рождения: **{pd.to_datetime(birthday).strftime("%d.%m.%Y")}**')
 
         year_v = calendar[calendar['date']==pd.to_datetime(birthday)]['years'].values[0]
-        month_v = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
+        mo = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
+        if pd.to_datetime(birthday) < pd.to_datetime(seasons[seasons['Месяц']==mo.split()[0]][str(pd.to_datetime(birthday).year)].values[0]):
+            month_v = calendar[calendar['date']==pd.to_datetime(pd.to_datetime(birthday)-timedelta(days=21))]['months'].values[0]
+        else:
+            month_v = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
         day_v = calendar[calendar['date']==pd.to_datetime(birthday)]['days'].values[0]
         day_ier = cicle[cicle["Название_calendar"] == day_v]["Иероглиф"].values[0]
         month_ier = cicle[cicle["Название_calendar"] == month_v]["Иероглиф"].values[0]
@@ -207,7 +224,11 @@ if city :
             # our_date = date(y, m, d)
 
             year_o = calendar[calendar['date']==pd.to_datetime(our_date)]['years'].values[0]
-            month_o = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
+            mv = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
+            if pd.to_datetime(our_date) < pd.to_datetime(seasons[seasons['Месяц']==mv.split()[0]][str(pd.to_datetime(our_date).year)].values[0]):
+                month_o = calendar[calendar['date']==pd.to_datetime(pd.to_datetime(our_date)-timedelta(days=21))]['months'].values[0]
+            else:
+                month_o = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
             day_o = calendar[calendar['date']==pd.to_datetime(our_date)]['days'].values[0]
             day = cicle[cicle["Название_calendar"] == day_o]["Название_Русский"].values[0]
             day_iero = cicle[cicle["Название_calendar"] == day_o]["Иероглиф"].values[0]
@@ -259,7 +280,7 @@ if city :
         current_hour_china = ''.join(current_hour_china_list[:2])
 
         # Инь-ян
-        in_yan = cicle[cicle['Название_calendar'] == day_o]['инь_ян'].values[0]
+        in_yan_day = cicle[cicle['Название_calendar'] == day_o]['инь_ян'].values[0]
        
         # Определяем сезон по дате
         if (pd.to_datetime(our_date) < pd.to_datetime(seasons[str(our_date.year)][0])) or (pd.to_datetime(our_date) >= pd.to_datetime(seasons[str(our_date.year)][23])):
@@ -301,7 +322,7 @@ if city :
 
         
         
-        st.markdown(f"День: **{in_yan.capitalize()}**\
+        st.markdown(f"День: **{in_yan_day.capitalize()}**\
                     \nЦзяЦзы дня: № **:blue[{zya_zy}]**\
                     \nТочки 24 Сезонов (Жэнь май): \t**:blue[{'  ||  '.join(season).strip()}]**\
                     \nДень недели: **{dow_dict[pd.to_datetime(our_date).day_of_week]}**\
@@ -312,7 +333,7 @@ if city :
                             **{sky_hands[sky_hands['Иероглиф']==day_iero[0]]['сторона_тела'].values[0]} сторона:  пять точек транспортировки и точки между ними (до локтя)**\
                     \n*Запреты на ножные каналы:*\
                     \n  **:red[{earth_legs[earth_legs['Иероглиф']==month_iero[1]]['канал'].values[0]}]**, \
-                            **{earth_legs[earth_legs['Иероглиф']==day_iero[1]]['сторона_тела'].values[0]} сторона: пять точек транспортировки и точки между ними (до колена)**\
+                            **{earth_legs[earth_legs['Иероглиф']==month_iero[1]]['сторона_тела'].values[0]} сторона: пять точек транспортировки и точки между ними (до колена)**\
                     \n*Дни небесного запрета:* {str_veto}")
 
 
