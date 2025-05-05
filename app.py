@@ -135,9 +135,13 @@ if birthday:
         birthday = str(pd.to_datetime(birthday, dayfirst=True)).split()[0]
         st.markdown(f'Дата рождения: **{pd.to_datetime(birthday).strftime("%d.%m.%Y")}**')
 
-        year_v = calendar[calendar['date']==pd.to_datetime(birthday)]['years'].values[0]
-        mo = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
-        if pd.to_datetime(birthday) < pd.to_datetime(seasons[seasons['Месяц']==mo.split()[0]][str(pd.to_datetime(birthday).year)].values[0]):
+        if pd.to_datetime(birthday) < pd.to_datetime(seasons.loc[2, str(pd.to_datetime(birthday).year)]):
+            year_v = calendar[calendar['date']==pd.to_datetime(pd.to_datetime(birthday)-timedelta(days=51))]['years'].values[0]
+        else:
+            year_v = calendar[calendar['date']==pd.to_datetime(birthday)]['years'].values[0]
+
+        mv = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
+        if pd.to_datetime(birthday) < pd.to_datetime(seasons[seasons['Месяц']==mv.split()[0]][str(pd.to_datetime(birthday).year)].values[0]):
             month_v = calendar[calendar['date']==pd.to_datetime(pd.to_datetime(birthday)-timedelta(days=21))]['months'].values[0]
         else:
             month_v = calendar[calendar['date']==pd.to_datetime(birthday)]['months'].values[0]
@@ -223,12 +227,17 @@ if city :
             y = int(our_date.year)
             # our_date = date(y, m, d)
 
-            year_o = calendar[calendar['date']==pd.to_datetime(our_date)]['years'].values[0]
-            mv = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
-            if pd.to_datetime(our_date) < pd.to_datetime(seasons[seasons['Месяц']==mv.split()[0]][str(pd.to_datetime(our_date).year)].values[0]):
+            if pd.to_datetime(our_date) < pd.to_datetime(seasons.loc[2, str(our_date.year)]):
+                year_o = calendar[calendar['date']==pd.to_datetime(pd.to_datetime(our_date)-timedelta(days=51))]['years'].values[0]
+            else:
+                year_o = calendar[calendar['date']==pd.to_datetime(our_date)]['years'].values[0]
+
+            mo = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
+            if pd.to_datetime(our_date) < pd.to_datetime(seasons[seasons['Месяц']==mo.split()[0]][str(pd.to_datetime(our_date).year)].values[0]):
                 month_o = calendar[calendar['date']==pd.to_datetime(pd.to_datetime(our_date)-timedelta(days=21))]['months'].values[0]
             else:
                 month_o = calendar[calendar['date']==pd.to_datetime(our_date)]['months'].values[0]
+
             day_o = calendar[calendar['date']==pd.to_datetime(our_date)]['days'].values[0]
             day = cicle[cicle["Название_calendar"] == day_o]["Название_Русский"].values[0]
             day_iero = cicle[cicle["Название_calendar"] == day_o]["Иероглиф"].values[0]
