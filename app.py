@@ -81,6 +81,12 @@ earth = {'子': ':blue[子]',
         '戌': ':orange[戌]',
         '亥': ':blue[亥]'}
 
+color_dict = {'甲':'green', '乙':'green', '丙':'red', '丁':'red', '戊':'orange', '己':'orange', '庚':'grey', '辛':'grey', '壬':'blue', '癸':'blue',
+                '子':'blue', '丑':'orange', '寅':'green', '卯':'green', '辰':'orange', '巳':'red', '午':'red', '未':'orange', '申':'grey', '酉':'grey', '戌':'orange', '亥':'blue'}
+
+color_dict_earth = {'子':'blue', '丑':'orange', '寅':'green', '卯':'green', '辰':'orange', '巳':'red', '午':'red', '未':'orange', '申':'grey', '酉':'grey', '戌':'orange', '亥':'blue'}
+
+
 @st.cache_data
 
 
@@ -115,6 +121,17 @@ def get_month(our_date):
     for i in range(end_months):
         lst.append(f"{next(anim)} {next(inyan)} {next(stih)}".capitalize())
     return lst[-1]
+
+
+# Функция для окрашивания отдельных слов
+def highlight_words(text):
+    highlighted_text = text
+    if text[0] in color_dict.keys():
+        highlighted_text = text.replace(text[0], f'<span style="color:{color_dict[text[0]]};font-weight: bold">{text[0]}</span>')
+        highlighted_text = highlighted_text.replace(text[1], f'<span style="color:{color_dict[text[1]]};font-weight: bold">{text[1]}</span>')
+    else:
+        highlighted_text = text.replace(" ", "<br>")
+    return highlighted_text
 ########################################  Создаём приложение ######################################
 
 cities, earth_legs, sky_hands, planets, moon_palace_df, calendar, cicle, seasons, veto = read_files()
@@ -164,11 +181,14 @@ if birthday:
             f"{cicle[cicle['Название_calendar'] == year_v]['Название_Русский'].values[0]}",
             year_ier
         ]
-        st.dataframe(birthday_df, hide_index=True, column_config={
-            "День":st.column_config.TextColumn(default="st."),
-            "Месяц":st.column_config.TextColumn(default="st."),
-            "Год":st.column_config.TextColumn(default="st.")
-        })
+        
+        birthday_df['День'] = birthday_df['День'].apply(highlight_words)
+        birthday_df['Месяц'] = birthday_df['Месяц'].apply(highlight_words)
+        birthday_df['Год'] = birthday_df['Год'].apply(highlight_words)
+        
+        styled_df_b = birthday_df.style.hide(axis="index").set_table_attributes('style="width: 100%;"').to_html()
+
+        st.write(styled_df_b, unsafe_allow_html=True)
     except:
         st.error("Некорректная дата. Попробуйте снова")
 
@@ -258,11 +278,14 @@ if city :
                 f"{cicle[cicle['Название_calendar'] == year_o]['Название_Русский'].values[0]}",
                 year_iero
             ]
-            st.dataframe(our_date_df, hide_index=True, column_config={
-                "День":st.column_config.TextColumn(default="st."),
-                "Месяц":st.column_config.TextColumn(default="st."),
-                "Год":st.column_config.TextColumn(default="st.")
-            }, use_container_width=False)
+            
+            our_date_df['День'] = our_date_df['День'].apply(highlight_words)
+            our_date_df['Месяц'] = our_date_df['Месяц'].apply(highlight_words)
+            our_date_df['Год'] = our_date_df['Год'].apply(highlight_words)
+            
+            styled_df_o = our_date_df.style.hide(axis="index").set_table_attributes('style="width: 100%;"').to_html()
+
+            st.write(styled_df_o, unsafe_allow_html=True)
         except:
             st.error("Некорректная дата. Попробуйте снова")
             
@@ -449,25 +472,34 @@ if city :
                 feitenbafa_day_disp = feitenbafa_day.iloc[:, 1:].T
                 feitenbafa_day_disp.to_csv("data/feitenbafa_day_disp.csv", index=False)
                 feitenbafa_day_disp = pd.read_csv("data/feitenbafa_day_disp.csv", header=1)
-                n=90
-                st.dataframe(
-                    feitenbafa_day_disp.style.map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1]),
-                    column_config= {
-                        feitenbafa_day_disp.columns[0]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[1]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[2]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[3]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[4]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[5]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[6]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[7]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[8]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[9]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[10]:st.column_config.Column(width=n),
-                        feitenbafa_day_disp.columns[11]:st.column_config.Column(width=n),
-                    },
-                    hide_index=True
-                )
+
+                for c in feitenbafa_day_disp.columns:
+                    feitenbafa_day_disp[c] = feitenbafa_day_disp[c].apply(highlight_words)
+                
+                styled_df_f = feitenbafa_day_disp.style.hide(
+                    axis="index"
+                    ).map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1]).to_html()
+                st.write(styled_df_f, unsafe_allow_html=True)
+
+
+                # n=90
+                # st.dataframe(
+                #     column_config= {
+                #         feitenbafa_day_disp.columns[0]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[1]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[2]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[3]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[4]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[5]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[6]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[7]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[8]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[9]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[10]:st.column_config.Column(width=n),
+                #         feitenbafa_day_disp.columns[11]:st.column_config.Column(width=n),
+                #     },
+                #     hide_index=True
+                # )
             
             
             if method=="ЛИН ГУЙ БА ФА":
@@ -503,14 +535,17 @@ if city :
                 linguibafa_df[linguibafa_df.columns[1:]].T.to_csv("data/linguibafa_df_disp.csv", index=False)
                 linguibafa_df_disp = pd.read_csv("data/linguibafa_df_disp.csv", header=1)
 
-                df = linguibafa_df_disp.style.map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1])
+                for c in linguibafa_df_disp.columns:
+                    linguibafa_df_disp[c] = linguibafa_df_disp[c].apply(highlight_words)
+                
+                df = linguibafa_df_disp.style.hide(axis="index").map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1]).to_html()
                     
                 
                 linguibafa_current_hour = linguibafa_df[linguibafa_df['Иероглиф']==current_hour_china[1]]
                 st.markdown(" || ".join(linguibafa_current_hour.iloc[0,1:].values.tolist()))
-                st.dataframe(
-                    df,
-                    hide_index=True
+                
+                st.write(
+                    df, unsafe_allow_html=True
                 )
 
 
@@ -561,12 +596,14 @@ if city :
                 st.markdown(" || ".join(current_hour_china_list))
                 
                 if st.checkbox("Показать рассчёт на всю дату"):
-                    df = da_syao.style.map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1])
+                    for c in da_syao.columns:
+                        da_syao[c] = da_syao[c].apply(highlight_words)
+
+                    df = da_syao.style.hide(axis="index").map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1]).to_html()
                     st.markdown("На день:")
-                    st.dataframe(
+                    st.write(
                         df,
-                        hide_index=True,
-                        use_container_width=True,
+                        unsafe_allow_html=True
                     )
     
     except:
