@@ -86,8 +86,55 @@ color_dict = {'甲':'green', '乙':'green', '丙':'red', '丁':'red', '戊':'ora
 
 color_dict_earth = {'子':'blue', '丑':'orange', '寅':'green', '卯':'green', '辰':'orange', '巳':'red', '午':'red', '未':'orange', '申':'grey', '酉':'grey', '戌':'orange', '亥':'blue'}
 
+dolgoletie = {
+    'ду-май':'жень-май',
+    'чун-май':'дай-май',
+    'чонг-май':'дай-май',
+    'инь-цзяо':'ян-цзяо',
+    'инь-вэй':'ян-вэй',
+    'жень-май':'ду-май',
+    'дай-май':'чонг-май',
+    'ян-цзяо':'инь-цзяо',
+    'ян-вэй':'инь-вэй',
+}
+
+skydoc = {
+    'ду-май':'ян-цзяо',
+    'чун-май':'инь-вэй',
+    'чонг-май':'инь-вэй',
+    'инь-цзяо':'жень-май',
+    'ян-вэй':'дай-май',
+    'ян-цзяо':'ду-май',
+    'инь-вэй':'чонг-май',
+    'жень-май':'инь-цзяо',
+    'дай-май':'ян-вэй',
+}
+
+birthqi = {
+    'ду-май':'инь-цзяо',
+    'чун-май':'ян-вэй',
+    'чонг-май':'ян-вэй',
+    'жень-май':'ян-цзяо',
+    'инь-вэй':'дай-май',
+    'инь-цзяо':'ду-май',
+    'ян-вэй':'чонг-май',
+    'ян-цзяо':'жень-май',
+    'дай-май':'инь-вэй',
+}
 
 @st.cache_data
+
+def get_combi(channels):
+    for ch in channels:
+        ch = ch.strip().split()[0].lower()
+    channel = channels[0]
+    if dolgoletie[channel] in channels:
+        dol = dolgoletie[channel].capitalize()
+    if skydoc[channel] in channels:
+        sky = skydoc[channel].capitalize()
+    if birthqi[channel] in channels:
+        bir = birthqi[channel].capitalize()
+    return [dol, sky, bir]
 
 
 def local_css(file_name):
@@ -572,6 +619,8 @@ if city :
                     end_time = datetime(y, m, d, hour=int(df.iloc[i,1].split(" - ")[1].split(".")[0]), minute=int(df.iloc[i,1].split(" - ")[1].split(".")[1])).time()
                     if (current_time_solar >= start_time) & (current_time_solar < end_time):
                         ser = " || ".join(df.iloc[i].to_list())
+                        time_channels = df.iloc[i].to_list()[2:]
+                        time_chan = df.iloc[i, 2]
                         ind = i
                         break
                 
@@ -579,6 +628,34 @@ if city :
                 
                 st.markdown("На текущий час:")
                 st.markdown(ser)
+                # st.markdown(f'time_channels: {time_channels}')
+                # st.markdown(f'time_chan: {time_chan}')
+                
+
+                channels = []
+                for ch in time_channels:
+                    if len(ch)>5:
+                        channels.append(ch.strip().split()[0].lower().replace('цяо',))
+                    else:
+                        st.markdown('На данный момент благоприятна только комбинация продления лет:')
+                        break
+                channel = channels[0]
+                st.markdown(f'{channels}')
+                if len(channels) == 2:
+                    st.markdown(f'Продление лет: {channel.capitalize()} - {dolgoletie[channel].capitalize()}')
+                else:
+                    if skydoc[channel] in channels:
+                        st.markdown(f'Продление лет: {channel.capitalize()} - {dolgoletie[channel].capitalize()}')
+                        st.markdown(f'Небесный лекарь: {channel.capitalize()} - {skydoc[channel].capitalize()}')
+                        st.markdown(f'Порождающая ци: {channel.capitalize()} - {birthqi[channel].capitalize()}')
+                    else:
+                        st.markdown(f'Или комбинация')
+                        st.markdown(f'Продление лет: {channel.capitalize()} - {dolgoletie[channel].capitalize()}')
+                        st.markdown(f'или')
+                        st.markdown(f'Продление лет: {channels[2].capitalize()} - {dolgoletie[channels[2]].capitalize()}')
+
+
+
                 
                 if st.checkbox("Показать рассчёт на всю дату"):
                     st.markdown("На день:")
