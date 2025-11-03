@@ -93,6 +93,7 @@ dolgoletie = {
     'инь-цзяо':'ян-цзяо',
     'инь-вэй':'ян-вэй',
     'жень-май':'ду-май',
+    'жэнь-май':'ду-май',
     'дай-май':'чонг-май',
     'ян-цзяо':'инь-цзяо',
     'ян-вэй':'инь-вэй',
@@ -107,6 +108,7 @@ skydoc = {
     'ян-цзяо':'ду-май',
     'инь-вэй':'чонг-май',
     'жень-май':'инь-цзяо',
+    'жэнь-май':'инь-цзяо',
     'дай-май':'ян-вэй',
 }
 
@@ -115,6 +117,7 @@ birthqi = {
     'чун-май':'ян-вэй',
     'чонг-май':'ян-вэй',
     'жень-май':'ян-цзяо',
+    'жэнь-май':'ян-цзяо',
     'инь-вэй':'дай-май',
     'инь-цзяо':'ду-май',
     'ян-вэй':'чонг-май',
@@ -515,6 +518,7 @@ if city :
             if method=="ФЭЙ ТЭН БА ФА":
             
                 st.markdown(" || ".join(current_hour_china_list[1:]))
+                st.markdown(f'feitenbafa_day: {feitenbafa_day}')
                 
                 feitenbafa_day_disp = feitenbafa_day.iloc[:, 1:].T
                 feitenbafa_day_disp.to_csv("data/feitenbafa_day_disp.csv", index=False)
@@ -527,26 +531,6 @@ if city :
                     axis="index"
                     ).map(lambda x: f"background-color: {'yellow' if x else 'red'}", subset=current_hour_china[1]).to_html()
                 st.write(styled_df_f, unsafe_allow_html=True)
-
-
-                # n=90
-                # st.dataframe(
-                #     column_config= {
-                #         feitenbafa_day_disp.columns[0]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[1]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[2]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[3]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[4]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[5]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[6]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[7]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[8]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[9]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[10]:st.column_config.Column(width=n),
-                #         feitenbafa_day_disp.columns[11]:st.column_config.Column(width=n),
-                #     },
-                #     hide_index=True
-                # )
             
             
             if method=="ЛИН ГУЙ БА ФА":
@@ -627,7 +611,7 @@ if city :
                 df_styled = df.style.set_properties(**{'background-color': 'yellow'}, subset=ind)
                 
                 st.markdown("На текущий час:")
-                st.markdown(ser)
+                # st.markdown(ser)
                 # st.markdown(f'time_channels: {time_channels}')
                 # st.markdown(f'time_chan: {time_chan}')
                 
@@ -635,12 +619,12 @@ if city :
                 channels = []
                 for ch in time_channels:
                     if len(ch)>5:
-                        channels.append(ch.strip().split()[0].lower().replace('цяо',))
+                        channels.append(ch.strip().split()[0].lower().replace('цяо', 'цзяо'))
                     else:
                         st.markdown('На данный момент благоприятна только комбинация продления лет:')
                         break
                 channel = channels[0]
-                st.markdown(f'{channels}')
+                # st.markdown(f'{channels}')
                 if len(channels) == 2:
                     st.markdown(f'Продление лет: {channel.capitalize()} - {dolgoletie[channel].capitalize()}')
                 else:
